@@ -22,13 +22,13 @@ classdef CreationOperator
                 operator_insertion_index = length(initial_state.Up_Spins) + 1;
                 end_length = length(initial_state.Up_Spins) + 1;
                 initial_spins = initial_state.Up_Spins;
-                spins = zeros(1,end_length);
+                spins = zeros(end_length);
             else
                 skips = length(initial_state.Up_Spins);
                 operator_insertion_index = length(initial_state.Down_Spins) + 1;
                 end_length = length(initial_state.Down_Spins) + 1;
                 initial_spins = initial_state.Down_Spins;
-                spins = zeros(1,end_length);
+                spins = zeros(end_length);
             end
 
             for extra_skips = 1:length(initial_spins)
@@ -50,7 +50,7 @@ classdef CreationOperator
             spins(operator_insertion_index) = obj.Spatial_Orbital_Index;
             
             while operator_insertion_index < end_length
-                spins(operator_insertion_index+1) = initial_spins(operator_insertion_index);
+                spins(operator_insertion_index+1,) = initial_spins(operator_insertion_index);
                 operator_insertion_index = operator_insertion_index + 1;
             end
 
