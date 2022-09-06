@@ -1,0 +1,2 @@
+test_creation_operator = CreationOperator(1,"up");
+test_creation_operator.apply(OrderedOccupationState(0, [], [] ) )
