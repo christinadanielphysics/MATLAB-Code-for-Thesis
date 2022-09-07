@@ -77,7 +77,7 @@ classdef System
             end
 
             return
-        
+        fermionic
         end
 
         function annihilation_map = get_annihilation_map(obj)
@@ -86,16 +86,16 @@ classdef System
 
             keySet = {};
             basis_states = obj.get_basis_states();
-            valueSet = OrderedOccupationState.empty;
+            valueSet = {};
 
             for operator_index = 1:length(annihilation_operators)
                 annihilation_operator = annihilation_operators(operator_index);
                 for counter = 1:length(basis_states)
                     initial_state = basis_states(1,counter);
-                    key_for_initial_state = string(annihilation_operator.Spatial_Orbital_Index) + "_" + string(annihilation_operator.Spin) + "_" + string(initial_state.Coefficient) + "_" + string(initial_state.Up_Spins) + "_" + string(initial_state.Down_Spins);
+                    key_for_initial_state = char(string(annihilation_operator.Spatial_Orbital_Index) + "_" + string(annihilation_operator.Spin) + "_" + string(initial_state.Coefficient) + "_" + "BASIS_INDEX" + string(counter))
                     keySet{counter} = key_for_initial_state;
                     final_state = annihilation_operator.apply(initial_state);
-                    valueSet(1,counter) = final_state;
+                    valueSet{counter} = final_state;
                 end
             end
             
@@ -109,16 +109,16 @@ classdef System
             
             keySet = {};
             basis_states = obj.get_basis_states();
-            valueSet = OrderedOccupationState.empty;
+            valueSet = {};
 
             for operator_index = 1:length(creation_operators)
                 creation_operator = creation_operators(operator_index);
                 for counter = 1:length(basis_states)
                     initial_state = basis_states(1,counter);
-                    key_for_initial_state = string(creation_operator.Spatial_Orbital_Index) + "_" + string(creation_operator.Spin) + "_" + string(initial_state.Coefficient) + "_" + string(initial_state.Up_Spins) + "_" + string(initial_state.Down_Spins);
+                    key_for_initial_state = char(string(creation_operator.Spatial_Orbital_Index) + "_" + string(creation_operator.Spin) + "_" + string(initial_state.Coefficient) + "_" + "BASIS_INDEX" + string(counter))
                     keySet{counter} = key_for_initial_state;
                     final_state = creation_operator.apply(initial_state);
-                    valueSet(1,counter) = final_state;
+                    valueSet{counter} = final_state;
                 end
             end
             
