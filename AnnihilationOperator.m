@@ -1,5 +1,4 @@
 classdef AnnihilationOperator
-
     properties
         Spatial_Orbital_Index
         Spin
