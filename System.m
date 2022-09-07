@@ -26,16 +26,16 @@ classdef System
 
             for up_row = 1:numRows_for_up
 
-                up_array = zeros(1,numCols_for_up);
+                up_array = zeros(numCols_for_up,1);
                 for up_col = 1:numCols_for_up
-                    up_array(1,up_col) = up_array_matrix(up_row,up_col);
+                    up_array(up_col,1) = up_array_matrix(up_row,up_col);
                 end
 
                 for down_row = 1:numRows_for_down
 
-                    down_array = zeros(1,numCols_for_down);
+                    down_array = zeros(numCols_for_down,1);
                     for down_col = 1:numCols_for_down
-                        down_array(1,down_col) = down_array_matrix(down_row,down_col);
+                        down_array(down_col,1) = down_array_matrix(down_row,down_col);
                     end
 
                     state = OrderedOccupationState(1,up_array,down_array);
