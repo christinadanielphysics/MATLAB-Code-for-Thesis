@@ -100,7 +100,6 @@ classdef System
             end
             
             annihilation_map = containers.Map(keySet,valueSet);
-            return
         end
 
         function creation_map = get_creation_map(obj)
@@ -123,7 +122,7 @@ classdef System
             end
             
             creation_map = containers.Map(keySet,valueSet);
-            return
         end
+
     end
 end

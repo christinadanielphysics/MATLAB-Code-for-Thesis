@@ -66,6 +66,24 @@ classdef AnnihilationOperator
             return
         end
 
+        function map = get_map(obj,annihilation_operator)
+            
+            keySet = {};
+            basis_states = obj.get_basis_states();
+            valueSet = zeros(1,len(basis_states));
+
+            for counter = 1:length(basis_states)
+                initial_state = basis_states(1,counter);
+                key_for_initial_state = string(initial_state.Coefficient) + "_" + string(initial_state.Up_Spins) + "_" + string(initial_state.Down_Spins);
+                keySet{counter} = key_for_initial_state;
+                final_state = annihilation_operator.apply(initial_state);
+                valueSet(1,counter) = final_state;
+            end
+            
+            map = containers.Map(keySet,valueSet);
+        end
+        
+
     end
 end
 
