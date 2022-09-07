@@ -61,7 +61,6 @@ classdef System
             end
 
             return
-
         end
 
         function creation_operators = get_creation_operators(obj)
@@ -77,7 +76,7 @@ classdef System
             end
 
             return
-        fermionic
+   
         end
 
         function annihilation_map = get_annihilation_map(obj)
@@ -92,7 +91,7 @@ classdef System
                 annihilation_operator = annihilation_operators(operator_index);
                 for counter = 1:length(basis_states)
                     initial_state = basis_states(1,counter);
-                    key_for_initial_state = char(string(annihilation_operator.Spatial_Orbital_Index) + "_" + string(annihilation_operator.Spin) + "_" + string(initial_state.Coefficient) + "_" + "BASIS_INDEX" + string(counter))
+                    key_for_initial_state = char("c" + string(annihilation_operator.Spatial_Orbital_Index) + string(annihilation_operator.Spin) + " | basis index = " + string(counter) + " >")
                     keySet{counter} = key_for_initial_state;
                     final_state = annihilation_operator.apply(initial_state);
                     valueSet{counter} = final_state;
@@ -115,7 +114,7 @@ classdef System
                 creation_operator = creation_operators(operator_index);
                 for counter = 1:length(basis_states)
                     initial_state = basis_states(1,counter);
-                    key_for_initial_state = char(string(creation_operator.Spatial_Orbital_Index) + "_" + string(creation_operator.Spin) + "_" + string(initial_state.Coefficient) + "_" + "BASIS_INDEX" + string(counter))
+                    key_for_initial_state = char("c†" + string(creation_operator.Spatial_Orbital_Index) + string(creation_operator.Spin)  + " | basis index = " + string(counter) + " >")
                     keySet{counter} = key_for_initial_state;
                     final_state = creation_operator.apply(initial_state);
                     valueSet{counter} = final_state;

@@ -7,6 +7,5 @@ second_state = test_annihilation_operator.apply(first_state);
 my_system = System(3,2,2);
 my_basis_states = my_system.get_basis_states();
 
-% need to check and test
 annihilation_map = my_system.get_annihilation_map();
 creation_map = my_system.get_creation_map();
