@@ -86,7 +86,7 @@ classdef System
 
             keySet = {};
             basis_states = obj.get_basis_states();
-            valueSet = zeros(1,length(basis_states));
+            valueSet = OrderedOccupationState.empty;
 
             for operator_index = 1:length(annihilation_operators)
                 annihilation_operator = annihilation_operators(operator_index);
@@ -109,7 +109,7 @@ classdef System
             
             keySet = {};
             basis_states = obj.get_basis_states();
-            valueSet = zeros(1,length(basis_states));
+            valueSet = OrderedOccupationState.empty;
 
             for operator_index = 1:length(creation_operators)
                 creation_operator = creation_operators(operator_index);
