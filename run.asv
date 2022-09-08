@@ -1,8 +1,19 @@
-test_annihilation_operator = AnnihilationOperator(3,"down");
-initial_up_spins = [1;3;5];
-initial_down_spins = [3;4];
-first_state = OrderedOccupationState(0,initial_up_spins,initial_down_spins);
-second_state = test_annihilation_operator.apply(first_state);
+%% Systems
 
-my_system = System(3,2,2);
-my_basis_statemy_system.get_basis_states()
+Number_of_Spatial_Orbitals = 3;
+Number_of_Spin_Up_Electrons = 2;
+Number_of_Spin_Down_Electrons = 2;
+
+system = System(Number_of_Spatial_Orbitals,Number_of_Spin_Up_Electrons,Number_of_Spin_Down_Electrons);
+system_minus = System(Number_of_Spatial_Orbitals,Number_of_Spin_Up_Electrons-1,Number_of_Spin_Down_Electrons);
+system_plus = System(Number_of_Spatial_Orbitals,Number_of_Spin_Up_Electrons+1,Number_of_Spin_Down_Electrons);
+
+%% Hubbard
+
+% U = 1;
+% mu = U * 0.5;
+% t = 1;
+% connected_ends = true;
+% 
+% hubbard_model = Hubbard(U,mu,t,connected_ends,system,system_minus,system_plus)
+

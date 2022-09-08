@@ -4,9 +4,12 @@ classdef System
         Number_of_Spatial_Orbitals
         Number_of_Spin_Up_Electrons 
         Number_of_Spin_Down_Electrons
+        Number_of_Electrons
         Annihilation_Map
         Creation_Map
         Spin_Values
+        Basis_States
+        Dimension
     end
 
     methods
@@ -14,9 +17,12 @@ classdef System
             obj.Number_of_Spatial_Orbitals = Number_of_Spatial_Orbitals;
             obj.Number_of_Spin_Up_Electrons = Number_of_Spin_Up_Electrons;
             obj.Number_of_Spin_Down_Electrons = Number_of_Spin_Down_Electrons;
-            obj.Annihilation_Map = obj.get_annihilation_map();
             obj.Creation_Map = obj.get_creation_map();
+            obj.Annihilation_Map = obj.get_annihilation_map();
             obj.Spin_Values = ["up","down"];
+            obj.Basis_States = obj.get_basis_states();
+            obj.Dimension = length(obj.Basis_States);
+            obj.Number_of_Electrons = Number_of_Spin_Up_Electrons + Number_of_Spin_Down_Electrons;
         end
 
         function basis_states = get_basis_states(obj)
@@ -93,15 +99,18 @@ classdef System
             basis_states = obj.get_basis_states();
             valueSet = {};
 
+            map_counter = 1;
             for operator_index = 1:length(annihilation_operators)
                 annihilation_operator = annihilation_operators(operator_index);
                 for counter = 1:length(basis_states)
                     initial_state = basis_states(1,counter);
                     [up_string,down_string] = initial_state.get_strings();
-                    key_for_initial_state = char("c" + string(annihilation_operator.Spatial_Orbital_Index) + string(annihilation_operator.Spin) + " | " + string(up_string) + ";" + string(down_string) + " >")
-                    keySet{counter} = key_for_initial_state;
+
+                    key_for_initial_state = char("c" + string(annihilation_operator.Spatial_Orbital_Index) + string(annihilation_operator.Spin) + " | " + up_string + ";" + down_string + " >")
+                    keySet{map_counter} = key_for_initial_state;
                     final_state = annihilation_operator.apply(initial_state);
-                    valueSet{counter} = final_state;
+                    valueSet{map_counter} = final_state;
+                    map_counter = map_counter + 1;
                 end
             end
             
@@ -117,15 +126,18 @@ classdef System
             basis_states = obj.get_basis_states();
             valueSet = {};
 
+            map_counter = 1;
             for operator_index = 1:length(creation_operators)
                 creation_operator = creation_operators(operator_index);
                 for counter = 1:length(basis_states)
                     initial_state = basis_states(1,counter);
                     [up_string,down_string] = initial_state.get_strings();
-                    key_for_initial_state = char("c†" + string(creation_operator.Spatial_Orbital_Index) + string(creation_operator.Spin)  + " | " + string(up_string) + ";" + string(down_string) + " >")
-                    keySet{counter} = key_for_initial_state;
+
+                    key_for_initial_state = char("c†" + string(creation_operator.Spatial_Orbital_Index) + string(creation_operator.Spin)  + " | " + up_string + ";" + down_string + " >")
+                    keySet{map_counter} = key_for_initial_state;
                     final_state = creation_operator.apply(initial_state);
-                    valueSet{counter} = final_state;
+                    valueSet{map_counter} = final_state;
+                    map_counter = map_counter + 1;
                 end
             end
             

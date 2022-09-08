@@ -15,12 +15,12 @@ classdef OrderedOccupationState
         function [up_string,down_string] = get_strings(obj)
             up_string = "";
             for element = 1:length(obj.Up_Spins)
-                up_string = up_string + string(obj.Up_Spins(element)) + "_";
+                up_string(element) = string(obj.Up_Spins(element)) + "_";
             end
 
             down_string = "";
             for element = 1:length(obj.Down_Spins)
-                down_string = down_string + string(obj.Down_Spins(element)) + "_";
+                down_string(element) = string(obj.Down_Spins(element)) + "_";
             end
 
             return
@@ -29,17 +29,16 @@ classdef OrderedOccupationState
         function product = scalar_product(obj,right_state)
             product = 0;
             if isequal(obj.Up_Spins,right_state.Up_Spins) && isequal(obj.Down_Spins,right_state.Down_Spins)
-                product = obj.Coefficient * right_state.Coefficient;
+            
             end
+
             return
         end
 
 
-        function number = scalar_product_one_with_many(obj,final_states)
-            number = 0;
-            for index = 1:length(final_states)
-                number = number + obj.scalar_product(final_states(index));
-            end
+        function product = scalar_product_one_with_many(obj,final_states)
+            product = 0;
+            
             return
         end
 
