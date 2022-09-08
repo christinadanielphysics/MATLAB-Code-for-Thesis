@@ -2,10 +2,8 @@ classdef Hubbard
 
     properties
         U
-        mu
         t
         connected_ends
-        hopping_matrix
         system
         number_of_spatial_orbitals
         system_dimension
@@ -18,12 +16,10 @@ classdef Hubbard
     end
 
     methods
-        function obj = Hubbard(U,mu,t,connected_ends,system,system_minus_up,system_minus_down)
+        function obj = Hubbard(U,t,connected_ends,system,system_minus_up,system_minus_down)
             obj.U = U;
-            obj.mu = mu;
             obj.t = t;
             obj.connected_ends = connected_ends;
-            obj.hopping_matrix = obj.get_hopping_matrix();
             obj.system = system;
             obj.number_of_spatial_orbitals = system.Number_of_Spatial_Orbitals;
             obj.system_dimension = system.Dimension;
@@ -34,7 +30,6 @@ classdef Hubbard
             obj.number_of_electrons = system.Number_of_Electrons;
             obj.basis_states = system.Basis_States;
         end
-
 
         function hopping_matrix = get_hopping_matrix(obj)
 
@@ -55,6 +50,9 @@ classdef Hubbard
         end
 
         function final_states = apply_kinetic_operator(obj,basis_state)
+
+            hopping_matrix = obj.get_hopping_matrix();
+
             final_states = OrderedOccupationState.empty;
             counter = 1;
             for i = 1:obj.number_of_spatial_orbitals
@@ -70,12 +68,12 @@ classdef Hubbard
                         
                         if obj.spin_values(spin_index) == "up"
                             result_2 = obj.creation_map_for_up(key_2);
-                            result_2.Coefficient = result_2.Coefficient * result_1.Coefficient * obj.hopping_matrix(i,j);
+                            result_2.Coefficient = result_2.Coefficient * result_1.Coefficient * hopping_matrix(i,j);
                             final_states(counter) = result_2;
                             counter = counter + 1;
                         else
                             result_2 = obj.creation_map_for_down(key_2);
-                            result_2.Coefficient = result_2.Coefficient * result_1.Coefficient * obj.hopping_matrix(i,j);
+                            result_2.Coefficient = result_2.Coefficient * result_1.Coefficient * hopping_matrix(i,j);
                             final_states(counter) = result_2;
                             counter = counter + 1;
                         end
@@ -143,9 +141,6 @@ classdef Hubbard
                 for left = 1:obj.system_dimension
                     final_states = obj.apply_interaction_operator(obj.basis_states(right));
                     interaction_matrix(left,right) = obj.basis_states(left).scalar_product_one_with_many(final_states);
-                    if left == right
-                        interaction_matrix(left,right) = interaction_matrix(left,right) - obj.mu * obj.number_of_electrons;
-                    end
                 end
             end
             return
