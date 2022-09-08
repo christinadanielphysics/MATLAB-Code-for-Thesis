@@ -106,7 +106,7 @@ classdef System
                     initial_state = basis_states(1,counter);
                     [up_string,down_string] = initial_state.get_strings();
 
-                    key_for_initial_state = char("c" + string(annihilation_operator.Spatial_Orbital_Index) + string(annihilation_operator.Spin) + " | " + up_string + ";" + down_string + " >")
+                    key_for_initial_state = char("c" + string(annihilation_operator.Spatial_Orbital_Index) + string(annihilation_operator.Spin) + " | " + up_string + ";" + down_string + " >");
                     keySet{map_counter} = key_for_initial_state;
                     final_state = annihilation_operator.apply(initial_state);
                     valueSet{map_counter} = final_state;
@@ -133,7 +133,7 @@ classdef System
                     initial_state = basis_states(1,counter);
                     [up_string,down_string] = initial_state.get_strings();
 
-                    key_for_initial_state = char("c†" + string(creation_operator.Spatial_Orbital_Index) + string(creation_operator.Spin)  + " | " + up_string + ";" + down_string + " >")
+                    key_for_initial_state = char("c†" + string(creation_operator.Spatial_Orbital_Index) + string(creation_operator.Spin)  + " | " + up_string + ";" + down_string + " >");
                     keySet{map_counter} = key_for_initial_state;
                     final_state = creation_operator.apply(initial_state);
                     valueSet{map_counter} = final_state;
