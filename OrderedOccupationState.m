@@ -38,7 +38,9 @@ classdef OrderedOccupationState
         function number = scalar_product_one_with_many(obj,final_states)
             number = 0;
             for index = 1:length(final_states)
-                number = number + obj.scalar_product(final_states(index));
+                if final_states(index).Coefficient ~= 0
+                    number = number + obj.scalar_product(final_states(index));
+                end
             end
             return
         end

@@ -93,7 +93,6 @@ classdef Hubbard
                 key_1 = char("c" + string(i) + "down" + " | " + up_string + ";" + down_string + " >");
                 result_1 = obj.annihilation_map(key_1);
 
-                % 
                 
                 [up_string,down_string] = result_1.get_strings();
                 key_2 = char("c†" + string(i) + "down"  + " | " + up_string + ";" + down_string + " >");
@@ -141,9 +140,6 @@ classdef Hubbard
                 for left = 1:obj.system_dimension
                     final_states = obj.apply_interaction_operator(obj.basis_states(right));
                     interaction_matrix(left,right) = obj.basis_states(left).scalar_product_one_with_many(final_states);
-                    if left == right
-                        interaction_matrix(left,right) = interaction_matrix(left,right) - (obj.mu * obj.number_of_electrons);
-                    end
                 end
             end
             return

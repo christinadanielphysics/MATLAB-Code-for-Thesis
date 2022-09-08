@@ -51,6 +51,8 @@ classdef Hubbard
 
         function final_states = apply_kinetic_operator(obj,basis_state)
 
+            [up_string_1,down_string_1] = basis_state.get_strings();
+
             hopping_matrix = obj.get_hopping_matrix();
 
             final_states = OrderedOccupationState.empty;
@@ -59,12 +61,11 @@ classdef Hubbard
                 for j = 1:obj.number_of_spatial_orbitals
                     for spin_index = 1:length(obj.spin_values)
 
-                        [up_string,down_string] = basis_state.get_strings();
-                        key_1 = char("c" + string(j) + obj.spin_values(spin_index) + " | " + up_string + ";" + down_string + " >");
+                        key_1 = char("c" + string(j) + obj.spin_values(spin_index) + " | " + up_string_1 + ";" + down_string_1 + " >");
                         result_1 = obj.annihilation_map(key_1);
 
-                        [up_string,down_string] = result_1.get_strings();
-                        key_2 = char("c†" + string(i) + obj.spin_values(spin_index)  + " | " + up_string + ";" + down_string + " >");
+                        [up_string_2,down_string_2] = result_1.get_strings();
+                        key_2 = char("c†" + string(i) + obj.spin_values(spin_index)  + " | " + up_string_2 + ";" + down_string_2 + " >");
                         
                         if obj.spin_values(spin_index) == "up"
                             result_2 = obj.creation_map_for_up(key_2);
@@ -93,7 +94,6 @@ classdef Hubbard
                 key_1 = char("c" + string(i) + "down" + " | " + up_string + ";" + down_string + " >");
                 result_1 = obj.annihilation_map(key_1);
 
-                % 
                 
                 [up_string,down_string] = result_1.get_strings();
                 key_2 = char("c†" + string(i) + "down"  + " | " + up_string + ";" + down_string + " >");
@@ -126,8 +126,8 @@ classdef Hubbard
             
             kinetic_matrix = zeros(obj.system_dimension,obj.system_dimension);
             for right = 1:obj.system_dimension
+                final_states = obj.apply_kinetic_operator(obj.basis_states(right));
                 for left = 1:obj.system_dimension
-                    final_states = obj.apply_kinetic_operator(obj.basis_states(right));
                     kinetic_matrix(left,right) = obj.basis_states(left).scalar_product_one_with_many(final_states);
                 end
             end
@@ -138,8 +138,8 @@ classdef Hubbard
 
             interaction_matrix = zeros(obj.system_dimension,obj.system_dimension);
             for right = 1:obj.system_dimension
+                final_states = obj.apply_interaction_operator(obj.basis_states(right));
                 for left = 1:obj.system_dimension
-                    final_states = obj.apply_interaction_operator(obj.basis_states(right));
                     interaction_matrix(left,right) = obj.basis_states(left).scalar_product_one_with_many(final_states);
                 end
             end
