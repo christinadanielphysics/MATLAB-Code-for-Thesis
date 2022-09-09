@@ -13,6 +13,8 @@ classdef Hubbard
         spin_values
         number_of_electrons
         basis_states
+        eigenvectors
+        eigenvalues
     end
 
     methods
@@ -29,6 +31,9 @@ classdef Hubbard
             obj.spin_values = system.Spin_Values;
             obj.number_of_electrons = system.Number_of_Electrons;
             obj.basis_states = system.Basis_States;
+            [eigenvectors,eigenvalues] = obj.diagonalize_hamiltonian_matrix();
+            obj.eigenvectors = eigenvectors;
+            obj.eigenvalues = eigenvalues;
         end
 
         function hopping_matrix = get_hopping_matrix(obj)

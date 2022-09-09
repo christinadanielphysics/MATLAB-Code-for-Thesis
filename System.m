@@ -13,12 +13,16 @@ classdef System
     end
 
     methods
-        function obj = System(Number_of_Spatial_Orbitals,Number_of_Spin_Up_Electrons,Number_of_Spin_Down_Electrons)
+        function obj = System(Number_of_Spatial_Orbitals,Number_of_Spin_Up_Electrons,Number_of_Spin_Down_Electrons,make_annihilation_map,make_creation_map)
             obj.Number_of_Spatial_Orbitals = Number_of_Spatial_Orbitals;
             obj.Number_of_Spin_Up_Electrons = Number_of_Spin_Up_Electrons;
             obj.Number_of_Spin_Down_Electrons = Number_of_Spin_Down_Electrons;
-            obj.Creation_Map = obj.get_creation_map();
-            obj.Annihilation_Map = obj.get_annihilation_map();
+            if make_annihilation_map == true
+                obj.Creation_Map = obj.get_creation_map();
+            end
+            if make_creation_map == true
+                obj.Annihilation_Map = obj.get_annihilation_map();
+            end
             obj.Spin_Values = ["up","down"];
             obj.Basis_States = obj.get_basis_states();
             obj.Dimension = length(obj.Basis_States);
