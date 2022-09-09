@@ -34,7 +34,6 @@ classdef OrderedOccupationState
             return
         end
 
-
         function number = scalar_product_one_with_many(obj,final_states)
             number = 0;
             for index = 1:length(final_states)
