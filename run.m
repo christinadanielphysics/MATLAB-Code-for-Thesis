@@ -31,9 +31,24 @@ lesser_green = LesserGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,
 
 t_values = 0:0.1:10;
 
-[data_real,data_imaginary] = lesser_green.compute(t_values);
-
-scatter(lesser_green.angular_frequency_differences,lesser_green.weights);
+[lesser_real,lesser_imaginary] = lesser_green.compute(t_values);
 
 %% Greater Green
+
+greater_green = GreaterGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard_model);
+
+[greater_real,greater_imaginary] = greater_green.compute(t_values);
+
+%% Plotting
+
+figure;
+scatter(greater_green.angular_frequency_differences,greater_green.weights);
+hold on;
+scatter(lesser_green.angular_frequency_differences,lesser_green.weights);
+
+figure;
+plot(t_values,greater_imaginary,t_values,greater_real)
+
+figure;
+plot(t_values,lesser_imaginary,t_values,lesser_real)
 

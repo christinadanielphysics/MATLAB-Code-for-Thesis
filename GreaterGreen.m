@@ -65,7 +65,7 @@ classdef GreaterGreen
             
         end
 
-        function [data_real,data_imaginary] = method1(obj,t_values)
+        function [data_real,data_imaginary] = compute(obj,t_values)
 
             data_real = zeros(1,length(t_values));
             data_imaginary = zeros(1,length(t_values));
