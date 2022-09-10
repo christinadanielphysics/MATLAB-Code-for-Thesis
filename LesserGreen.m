@@ -32,11 +32,11 @@ classdef LesserGreen
             obj.eigenvectors_for_hubbard = hubbard.eigenvectors;
 
             if obj.spin == "up"
-                obj.system = System(hubbard.number_of_spatial_orbitals,hubbard.number_of_spin_up_electrons-1,hubbard.number_of_spin_down_electrons,true,true);
+                obj.system = System(hubbard.number_of_spatial_orbitals,hubbard.number_of_spin_up_electrons-1,hubbard.number_of_spin_down_electrons,true,false);
                 obj.system_minus_up = System(hubbard.number_of_spatial_orbitals,hubbard.number_of_spin_up_electrons-2,hubbard.number_of_spin_down_electrons,false,true);
                 obj.system_minus_down = System(hubbard.number_of_spatial_orbitals,hubbard.number_of_spin_up_electrons-1,hubbard.number_of_spin_down_electrons-1,false,true);
             else % "down"
-                obj.system = System(hubbard.number_of_spatial_orbitals,hubbard.number_of_spin_up_electrons,hubbard.number_of_spin_down_electrons-1,true,true);
+                obj.system = System(hubbard.number_of_spatial_orbitals,hubbard.number_of_spin_up_electrons,hubbard.number_of_spin_down_electrons-1,true,false);
                 obj.system_minus_up = System(hubbard.number_of_spatial_orbitals,hubbard.number_of_spin_up_electrons-1,hubbard.number_of_spin_down_electrons-1,false,true);
                 obj.system_minus_down = System(hubbard.number_of_spatial_orbitals,hubbard.number_of_spin_up_electrons,hubbard.number_of_spin_down_electrons-2,false,true);
             end
@@ -45,7 +45,6 @@ classdef LesserGreen
             obj.hubbard_minus = hubbard_minus;
             obj.eigenvalues_for_hubbard_minus = hubbard_minus.eigenvalues;
             obj.eigenvectors_for_hubbard_minus = hubbard_minus.eigenvectors;
-
             
             obj.system_for_element = hubbard.system;
             obj.system_minus_up_for_element = hubbard.system_minus_up;
@@ -74,7 +73,7 @@ classdef LesserGreen
                 data_complex = 0;
                 for a = 1:obj.a_max
                    w_difference = obj.eigenvalues_for_hubbard_minus(a) - obj.eigenvalues_for_hubbard(1);
-                   data_complex = data_complex + (1i) * obj.weights(a) * exp( (1i)*(w_difference)*t_values(t_index) );
+                   data_complex = data_complex + (1i) * obj.weights(a) * exp( (1i)*w_difference*t_values(t_index) );
                 end
                 data_real(1,t_index) = real(data_complex);
                 data_imaginary(1,t_index) = imag(data_complex);

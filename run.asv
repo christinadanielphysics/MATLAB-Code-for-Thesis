@@ -4,9 +4,9 @@ close all;
 
 %% System
 
-Number_of_Spatial_Orbitals = 2;
+Number_of_Spatial_Orbitals = 4;
 Number_of_Spin_Up_Electrons = 2;
-Number_of_Spin_Down_Electrons = 1;
+Number_of_Spin_Down_Electrons = 2;
 
 system = System(Number_of_Spatial_Orbitals,Number_of_Spin_Up_Electrons,Number_of_Spin_Down_Electrons,true,true);
 
