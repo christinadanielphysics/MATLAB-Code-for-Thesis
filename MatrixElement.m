@@ -27,12 +27,12 @@ classdef MatrixElement
 
     methods
         function obj = MatrixElement(type,spatial_orbital_index,spin,left_subscript,left_hubbard,right_subscript,right_hubbard,system,system_minus_up,system_minus_down,system_plus_up,system_plus_down,lesser_or_greater)
-            obj.type = type; % operator
+            obj.type = type; % operator (i.e. "creation" or "annihilation")
             obj.spatial_orbital_index = spatial_orbital_index; % operator
             obj.spin = spin; % operator
-            obj.left_subscript = left_subscript; % subscript for left eigenstate
+            obj.left_subscript = left_subscript; % subscript for left eigenstate (e.g. subscript for ground state is 1)
             obj.left_hubbard = left_hubbard; % hubbard object for left eigenstate
-            obj.right_subscript = right_subscript; % subscript for left eigenstate
+            obj.right_subscript = right_subscript; % subscript for right eigenstate (e.g. subscript for ground state is 1)
             obj.right_hubbard = right_hubbard; % hubbard object for right eigenstate
             obj.basis_left = left_hubbard.basis_states; % occupation basis for left eigenstate
             obj.basis_right = right_hubbard.basis_states; % occupation basis for right eigenstate
