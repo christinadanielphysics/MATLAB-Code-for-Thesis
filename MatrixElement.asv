@@ -27,12 +27,12 @@ classdef MatrixElement
 
     methods
         function obj = MatrixElement(type,spatial_orbital_index,spin,left_subscript,left_hubbard,right_subscript,right_hubbard,system,system_minus_up,system_minus_down,system_plus_up,system_plus_down,lesser_or_greater)
-            obj.type = type; % operator
+            obj.type = type; % operator (i.e. "creation" or "annihilation")
             obj.spatial_orbital_index = spatial_orbital_index; % operator
             obj.spin = spin; % operator
-            obj.left_subscript = left_subscript; % subscript for left eigenstate
+            obj.left_subscript = left_subscript; % subscript for left eigenstate (e.g. subscript for ground state is 1)
             obj.left_hubbard = left_hubbard; % hubbard object for left eigenstate
-            obj.right_subscript = right_subscript; % subscript for left eigenstate
+            obj.right_subscript = right_subscript; % subscript for right eigenstate (e.g. subscript for ground state is 1)
             obj.right_hubbard = right_hubbard; % hubbard object for right eigenstate
             obj.basis_left = left_hubbard.basis_states; % occupation basis for left eigenstate
             obj.basis_right = right_hubbard.basis_states; % occupation basis for right eigenstate
@@ -42,13 +42,16 @@ classdef MatrixElement
             obj.right_eigenvectors = right_hubbard.eigenvectors;
             obj.left_number_of_electrons = left_hubbard.number_of_electrons;
             obj.right_number_of_electrons = right_hubbard.number_of_electrons;
-            obj.system = system;
-            obj.system_minus_up = system_minus_up;
-            obj.system_minus_down = system_minus_down;
-            obj.system_plus_up = system_plus_up;
-            obj.system_plus_down = system_plus_down;
-            obj.lesser_or_greater = lesser_or_greater;
+            
+            obj.system = system; % N electrons
+            obj.system_minus_up = system_minus_up; % one up electron missing
+            obj.system_minus_down = system_minus_down; % one down electron missing
+            obj.system_plus_up = system_plus_up; % one extra up electron
+            obj.system_plus_down = system_plus_down; % one extra down electron
 
+            obj.lesser_or_greater = lesser_or_greater; % "lesser" or "greater" 
+
+            % obtain the correct map for the matrix element
             if obj.type == "creation"
                 if obj.lesser_or_greater == "lesser"
                     if obj.spin == "up"
@@ -99,6 +102,10 @@ classdef MatrixElement
                     % get key
                     [up_string,down_string] = right_basis_state.get_strings();
                     key = char(operator_string + string(obj.spatial_orbital_index) + obj.spin + " | " + up_string + ";" + down_string + " >");
+
+                    key
+                    
+                    
                     resulting_state = obj.map(key);
                     
                     % get left basis state

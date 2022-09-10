@@ -102,6 +102,7 @@ classdef MatrixElement
                     % get key
                     [up_string,down_string] = right_basis_state.get_strings();
                     key = char(operator_string + string(obj.spatial_orbital_index) + obj.spin + " | " + up_string + ";" + down_string + " >");
+                    
                     resulting_state = obj.map(key);
                     
                     % get left basis state

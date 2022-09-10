@@ -18,10 +18,10 @@ classdef System
             obj.Number_of_Spin_Up_Electrons = Number_of_Spin_Up_Electrons;
             obj.Number_of_Spin_Down_Electrons = Number_of_Spin_Down_Electrons;
             if make_annihilation_map == true
-                obj.Creation_Map = obj.get_creation_map();
+                obj.Annihilation_Map = obj.get_annihilation_map();
             end
             if make_creation_map == true
-                obj.Annihilation_Map = obj.get_annihilation_map();
+                obj.Creation_Map = obj.get_creation_map();
             end
             obj.Spin_Values = ["up","down"];
             obj.Basis_States = obj.get_basis_states();

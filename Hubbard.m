@@ -5,6 +5,8 @@ classdef Hubbard
         t
         connected_ends
         system
+        system_minus_up
+        system_minus_down
         number_of_spatial_orbitals
         system_dimension
         annihilation_map
@@ -25,6 +27,8 @@ classdef Hubbard
             obj.t = t;
             obj.connected_ends = connected_ends;
             obj.system = system;
+            obj.system_minus_up = system_minus_up;
+            obj.system_minus_down = system_minus_down;
             obj.number_of_spatial_orbitals = system.Number_of_Spatial_Orbitals;
             obj.system_dimension = system.Dimension;
             obj.annihilation_map = system.Annihilation_Map;
@@ -75,7 +79,7 @@ classdef Hubbard
 
                         [up_string_2,down_string_2] = result_1.get_strings();
                         key_2 = char("c†" + string(i) + obj.spin_values(spin_index)  + " | " + up_string_2 + ";" + down_string_2 + " >");
-                        
+
                         if obj.spin_values(spin_index) == "up"
                             result_2 = obj.creation_map_for_up(key_2);
                             result_2.Coefficient = result_2.Coefficient * result_1.Coefficient * hopping_matrix(i,j);
