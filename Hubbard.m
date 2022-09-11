@@ -154,6 +154,9 @@ classdef Hubbard
                 final_states = obj.apply_interaction_operator(obj.basis_states(right));
                 for left = 1:obj.system_dimension
                     interaction_matrix(left,right) = obj.basis_states(left).scalar_product_one_with_many(final_states);
+                    if left == right
+                        interaction_matrix(left,right)  = interaction_matrix(left,right) - 0.5 * obj.U * obj.number_of_electrons;
+                    end
                 end
             end
             return
