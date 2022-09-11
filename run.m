@@ -6,9 +6,14 @@ close all;
 
 %% Compressive Sensing Parameters
 
-start_time_inclusive = 0;
-end_time_inclusive = 50;
-number_of_time_values = 500;
+n = 4096; % number of time values = length of signal
+p = 128;
+
+Fs = 10; % Sampling frequency
+T = 1/Fs; % Sampling period
+t_values = (0:n-1)*T;
+f = Fs*(0:n-1)/n;
+w_values = f*pi;
 
 %% System
 
@@ -37,8 +42,6 @@ spatial_orbital_index_j = 1;
 
 lesser_green = LesserGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard_model);
 
-t_values = linspace(start_time_inclusive,end_time_inclusive,number_of_time_values);
-
 [lesser_real,lesser_imaginary] = lesser_green.compute(t_values);
 
 %% Greater Green
@@ -46,6 +49,37 @@ t_values = linspace(start_time_inclusive,end_time_inclusive,number_of_time_value
 greater_green = GreaterGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard_model);
 
 [greater_real,greater_imaginary] = greater_green.compute(t_values);
+
+
+
+%% Compressive Sensing
+% Theta*s == y from Steve Brunton is the same as A*x = b from Emmanuel Candes
+
+% greater
+perm = round(rand(p,1) * n);
+y = -greater_imaginary(perm)'; % compressed measurement
+
+Psi = dct(eye(n,n)); % build Psi
+Theta = Psi(perm,:); % measure rows of Psi
+
+% L1-Minimization using CVX
+cvx_begin;
+    variable s(n);
+    minimize( norm(s,1) );
+    subject to
+        Theta*s == y;
+cvx_end;
+
+% lesser
+y_lesser = lesser_imaginary(perm)'; % compressed measurement
+
+% L1-Minimization using CVX
+cvx_begin;
+    variable s_lesser(n);
+    minimize( norm(s_lesser,1) );
+    subject to
+        Theta*s_lesser == y_lesser;
+cvx_end;
 
 %% Plotting
 
@@ -58,9 +92,15 @@ scatter(t_values,lesser_imaginary,'green')
 hold on;
 scatter(t_values,lesser_real,'blue')
 title('Lesser and Greater')
-
 figure;
-scatter(greater_green.angular_frequency_differences,greater_green.weights);
+scatter(greater_green.angular_frequency_differences,greater_green.weights,'red');
 hold on;
-scatter(lesser_green.angular_frequency_differences,lesser_green.weights);
+scatter(lesser_green.angular_frequency_differences,lesser_green.weights,'red');
+hold on;
+plot(w_values,s,'blue');
+hold on;
+plot(-w_values,s_lesser,'blue')
 title('Lesser and Greater')
+
+
+
