@@ -11,8 +11,8 @@ p = 128;
 
 Fs = 10; % Sampling frequency
 T = 1/Fs; % Sampling period
-t_values = (1:n)*T; % or t_values = (0:n-1)*T ...
-f = Fs*(1:n)/n; % ... with f = Fs*(0:n-1)/n
+t_values = (1:n)*T; % or, (0:n-1)*T
+f = Fs*(1:n)/n; % or, Fs*(0:n-1)/n
 w_values = f*pi;
 
 %% System
