@@ -52,6 +52,10 @@ greater_green = GreaterGreen(spin,spatial_orbital_index_i,spatial_orbital_index_
 
 
 
+
+
+
+
 %% Compressive Sensing
 % Theta*s == y from Steve Brunton is the same as A*x = b from Emmanuel Candes
 
