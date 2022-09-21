@@ -56,9 +56,6 @@ classdef Hubbard
                     if abs(i-j)==1
                         hopping_matrix(i,j) = obj.t;
                     end
-                    if abs(i-j)==2
-                        hopping_matrix(i,j) = obj.t_2;
-                    end
                     if obj.connected_ends == true
                         if abs(i-j) == obj.number_of_spatial_orbitals - 1
                             hopping_matrix(i,j) = obj.t;

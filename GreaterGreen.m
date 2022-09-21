@@ -41,7 +41,7 @@ classdef GreaterGreen
                 obj.system_minus_down = hubbard.system;
             end
 
-            hubbard_plus = Hubbard(hubbard.U,hubbard.t,hubbard.connected_ends,obj.system,obj.system_minus_up,obj.system_minus_down);
+            hubbard_plus = Hubbard(hubbard.U,hubbard.t,hubbard.t_0,hubbard.t_2,hubbard.connected_ends,obj.system,obj.system_minus_up,obj.system_minus_down);
             obj.hubbard_plus = hubbard_plus;
             obj.eigenvalues_for_hubbard_plus = hubbard_plus.eigenvalues;
             obj.eigenvectors_for_hubbard_plus = hubbard_plus.eigenvectors;
