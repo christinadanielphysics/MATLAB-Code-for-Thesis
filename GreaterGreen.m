@@ -62,7 +62,6 @@ classdef GreaterGreen
             end
             obj.weights = weights;
             obj.angular_frequency_differences = angular_frequency_differences;
-            
         end
 
         function [data_real,data_imaginary] = compute(obj,t_values)
@@ -82,5 +81,6 @@ classdef GreaterGreen
 
             return
         end
+
     end
 end

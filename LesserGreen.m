@@ -18,7 +18,7 @@ classdef LesserGreen
         system_minus_down_for_element
         a_max
         weights % each weight is a product of two matrix elements
-        angular_frequency_differences 
+        angular_frequency_differences
     end
 
     methods
@@ -61,7 +61,6 @@ classdef LesserGreen
             end
             obj.weights = weights;
             obj.angular_frequency_differences = angular_frequency_differences;
-            
         end
 
         function [data_real,data_imaginary] = compute(obj,t_values)
@@ -93,6 +92,7 @@ classdef LesserGreen
             return
         
         end
+
     end
 end
 

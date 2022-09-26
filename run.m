@@ -6,14 +6,16 @@ close all;
 
 %% Compressive Sensing Parameters
 
-n = 4; % 4096; % number of time values = length of signal
-p = 2; % 128; % number of random samples
-Fs = 1e16; % 10; % Sampling frequency
+n = 4096; % number of time values = length of signal
+p = 128; % number of random samples
+Fs = 10; % Sampling frequency
 
 T = 1/Fs; % Sampling period
 t_values = (0:n-1)*T; % or t_values = (0:n-1)*T ...
 f = Fs*(0:n-1)/n; % ... with f = Fs*(0:n-1)/n
 w_values = f*pi;
+
+delta_f = f(2)-f(1);
 
 %% System
 
@@ -26,11 +28,11 @@ system = System(Number_of_Spatial_Orbitals,Number_of_Spin_Up_Electrons,Number_of
 
 %% Hubbard
 
-U = 0.1;
+U = 1;
 mu = 0.5*U;
-t_1 = 1.5;
+t_1 = 1;
 t_0 = 0;
-t_2 = 5;
+t_2 = 0;
 connected_ends = true;
 
 system_minus_up = System(Number_of_Spatial_Orbitals,Number_of_Spin_Up_Electrons-1,Number_of_Spin_Down_Electrons,false,true);
@@ -42,7 +44,7 @@ hubbard_model = Hubbard(U,t_1,t_0,t_2,connected_ends,system,system_minus_up,syst
 
 spin = "up";
 spatial_orbital_index_i = 1;
-spatial_orbital_index_j = 2;
+spatial_orbital_index_j = 1;
 
 lesser_green = LesserGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard_model);
 
@@ -54,38 +56,28 @@ greater_green = GreaterGreen(spin,spatial_orbital_index_i,spatial_orbital_index_
 
 [greater_real,greater_imaginary] = greater_green.compute(t_values);
 
-
-
-
-
 %% Compressive Sensing
-% Theta*s == y from Steve Brunton is the same as A*x = b from Emmanuel Candes
+
+compressive_zero = 1e-8;
+compressive_threshold = 0.05;
+
+perm = round(rand(p,1) * n);
 
 % greater
-perm = round(rand(p,1) * n);
-y = -greater_imaginary(perm)'; % compressed measurement
-
-Psi = dct(eye(n,n)); % build Psi
-Theta = Psi(perm,:); % measure rows of Psi
-
-% L1-Minimization using CVX
-cvx_begin;
-    variable s(n);
-    minimize( norm(s,1) );
-    subject to
-        Theta*s == y;
-cvx_end;
+y_greater = -greater_imaginary(perm)'; % compressed measurement
+greater_compressive = CompressiveSensing(n,y_greater,perm,compressive_zero,compressive_threshold);
+s_greater_full = greater_compressive.compute();
+[combined_greater_w_values,combined_greater_weights] = greater_compressive.combine(w_values,s_greater_full);
+[new_greater_w_values,new_greater_weights] = greater_compressive.chop(combined_greater_w_values,combined_greater_weights);
 
 % lesser
 y_lesser = lesser_imaginary(perm)'; % compressed measurement
+lesser_compressive = CompressiveSensing(n,y_lesser,perm,compressive_zero,compressive_threshold);
+s_lesser_full = lesser_compressive.compute();
+[combined_lesser_w_values,combined_lesser_weights] = lesser_compressive.combine(w_values,s_lesser_full);
+[new_lesser_w_values,new_lesser_weights] = lesser_compressive.chop(combined_lesser_w_values,combined_lesser_weights);
 
-% L1-Minimization using CVX
-cvx_begin;
-    variable s_lesser(n);
-    minimize( norm(s_lesser,1) );
-    subject to
-        Theta*s_lesser == y_lesser;
-cvx_end;
+
 
 %% Plotting
 
@@ -101,11 +93,11 @@ title('Lesser and Greater')
 figure;
 scatter(greater_green.angular_frequency_differences,greater_green.weights,'red');
 hold on;
-scatter(lesser_green.angular_frequency_differences,lesser_green.weights,'red');
+scatter(lesser_green.angular_frequency_differences,lesser_green.weights,'black');
 hold on;
-scatter(w_values,s/sum(s),'blue','x');
+scatter(new_greater_w_values,new_greater_weights/abs(sum(new_greater_weights))/2,'blue','x');
 hold on;
-scatter(-w_values,s_lesser/abs(sum(s_lesser)),'blue','x')
+scatter(-new_lesser_w_values,new_lesser_weights/abs(sum(new_lesser_weights))/2,'blue','x')
 title('Lesser and Greater')
 
 

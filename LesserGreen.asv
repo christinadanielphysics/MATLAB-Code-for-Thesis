@@ -18,11 +18,12 @@ classdef LesserGreen
         system_minus_down_for_element
         a_max
         weights % each weight is a product of two matrix elements
-        angular_frequency_differences 
+        angular_frequency_differences
+        zero
     end
 
     methods
-        function obj = LesserGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard)
+        function obj = LesserGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard,zero)
             obj.spin = spin; % operator (i.e. "up" or "down")
             obj.spatial_orbital_index_i = spatial_orbital_index_i;
             obj.spatial_orbital_index_j = spatial_orbital_index_j;
@@ -41,7 +42,7 @@ classdef LesserGreen
                 obj.system_minus_down = System(hubbard.number_of_spatial_orbitals,hubbard.number_of_spin_up_electrons,hubbard.number_of_spin_down_electrons-2,false,true);
             end
 
-            hubbard_minus = Hubbard(hubbard.U,hubbard.t,hubbardhubbard.connected_ends,obj.system,obj.system_minus_up,obj.system_minus_down);
+            hubbard_minus = Hubbard(hubbard.U,hubbard.t,hubbard.t_0,hubbard.t_2,hubbard.connected_ends,obj.system,obj.system_minus_up,obj.system_minus_down);
             obj.hubbard_minus = hubbard_minus;
             obj.eigenvalues_for_hubbard_minus = hubbard_minus.eigenvalues;
             obj.eigenvectors_for_hubbard_minus = hubbard_minus.eigenvectors;
@@ -61,7 +62,7 @@ classdef LesserGreen
             end
             obj.weights = weights;
             obj.angular_frequency_differences = angular_frequency_differences;
-            
+            obj.zero = zero;
         end
 
         function [data_real,data_imaginary] = compute(obj,t_values)
@@ -93,6 +94,29 @@ classdef LesserGreen
             return
         
         end
+
+        function combine(obj)
+            number_of_points = length(obj.weights);
+            combined_w_values = [];
+            combined_weights = [];
+            counter = 1;
+            while counter <= number_of_points
+                initial_counter = counter;
+                weight = obj.weights(counter);
+                w_value = obj.angular_frequency_differences(counter);
+                sum = 0;
+                while abs(obj.weights(counter)) > obj.zero
+                    sum = sum + obweights(counter); % add the weights
+                    weight = sum; % update the weight
+                    w_value = 0.5 * (w_value + input_w_values(counter)); % average the angular frequencies
+                    counter = counter + 1;
+                end
+                combined_w_values(initial_counter) = w_value;
+                combined_weights(initial_counter) = weight;
+                counter = counter + 1;
+            end
+        end
+
     end
 end
 
