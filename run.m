@@ -44,7 +44,7 @@ hubbard_model = Hubbard(U,t_1,t_0,t_2,connected_ends,system,system_minus_up,syst
 
 spin = "up";
 spatial_orbital_index_i = 1;
-spatial_orbital_index_j = 1;
+spatial_orbital_index_j = 4;
 
 lesser_green = LesserGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard_model);
 
@@ -58,21 +58,21 @@ greater_green = GreaterGreen(spin,spatial_orbital_index_i,spatial_orbital_index_
 
 %% Compressive Sensing
 
-compressive_zero = 1e-8;
-compressive_threshold = 0.05;
+combine_zero = 1e-8;
+chop_threshold = 1e-1;
 
 perm = round(rand(p,1) * n);
 
 % greater
 y_greater = -greater_imaginary(perm)'; % compressed measurement
-greater_compressive = CompressiveSensing(n,y_greater,perm,compressive_zero,compressive_threshold);
+greater_compressive = CompressiveSensing(n,y_greater,perm,combine_zero,chop_threshold);
 s_greater_full = greater_compressive.compute();
 [combined_greater_w_values,combined_greater_weights] = greater_compressive.combine(w_values,s_greater_full);
 [new_greater_w_values,new_greater_weights] = greater_compressive.chop(combined_greater_w_values,combined_greater_weights);
 
 % lesser
 y_lesser = lesser_imaginary(perm)'; % compressed measurement
-lesser_compressive = CompressiveSensing(n,y_lesser,perm,compressive_zero,compressive_threshold);
+lesser_compressive = CompressiveSensing(n,y_lesser,perm,combine_zero,chop_threshold);
 s_lesser_full = lesser_compressive.compute();
 [combined_lesser_w_values,combined_lesser_weights] = lesser_compressive.combine(w_values,s_lesser_full);
 [new_lesser_w_values,new_lesser_weights] = lesser_compressive.chop(combined_lesser_w_values,combined_lesser_weights);
@@ -91,13 +91,13 @@ hold on;
 scatter(t_values,lesser_real,'blue')
 title('Lesser and Greater')
 figure;
-scatter(greater_green.angular_frequency_differences,greater_green.weights,'red');
+scatter(greater_green.angular_frequency_differences,greater_green.weights,'black');
 hold on;
 scatter(lesser_green.angular_frequency_differences,lesser_green.weights,'black');
 hold on;
-scatter(new_greater_w_values,new_greater_weights/abs(sum(new_greater_weights))/2,'blue','x');
+scatter(new_greater_w_values,new_greater_weights/sum(abs(new_greater_weights))/2,'blue','o','MarkerFaceColor', 'b');
 hold on;
-scatter(-new_lesser_w_values,new_lesser_weights/abs(sum(new_lesser_weights))/2,'blue','x')
+scatter(-new_lesser_w_values,new_lesser_weights/sum(abs(new_lesser_weights))/2,'blue','o','MarkerFaceColor', 'b');
 title('Lesser and Greater')
 
 

@@ -44,7 +44,7 @@ classdef CompressiveSensing
                 weight = input_weights(counter);
                 w_value = input_w_values(counter);
                 sum = 0;
-                while abs(input_weights(counter)) > obj.zero
+                while abs(input_weights(counter)) > obj.zero && counter ~= number_of_points
                     sum = sum + input_weights(counter); % add the weights
                     weight = sum; % update the weight
                     w_value = 0.5 * (w_value + input_w_values(counter)); % average the angular frequencies
@@ -62,7 +62,7 @@ classdef CompressiveSensing
             new_weights = [];
             counter = 1;
             for index = 1:array_length
-                if abs(combined_weights(index))/sum(combined_weights) >= obj.compressive_threshold
+                if abs(combined_weights(index))/max(abs(combined_weights)) >= obj.compressive_threshold
                     new_w_values(counter) = combined_w_values(index);
                     new_weights(counter) = combined_weights(index);
                     counter = counter + 1;
