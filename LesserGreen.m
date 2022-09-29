@@ -93,6 +93,17 @@ classdef LesserGreen
         
         end
 
+        function [compressive_w_differences,compressive_weights] = approximate(obj,n,perm,t_values,w_values,combine_zero,chop_threshold)
+            [~,lesser_imaginary] = obj.compute(t_values);
+            y_lesser = lesser_imaginary(perm)'; % compressed measurement
+            lesser_compressive = CompressiveSensing(n,y_lesser,perm,combine_zero,chop_threshold);
+            s_lesser_full = lesser_compressive.compute();
+            [combined_w_values,combined_weights] = lesser_compressive.combine(w_values,s_lesser_full);
+            [compressive_w_differences,compressive_weights] = lesser_compressive.chop(combined_w_values,combined_weights);
+            compressive_weights = compressive_weights/sum(abs(compressive_weights))/2; % normalize the weights
+            return
+        end
+
     end
 end
 

@@ -82,5 +82,15 @@ classdef GreaterGreen
             return
         end
 
+        function [compressive_w_differences,compressive_weights] = approximate(obj,n,perm,t_values,w_values,combine_zero,chop_threshold)
+            [~,greater_imaginary] = obj.compute(t_values);
+            y_greater = -greater_imaginary(perm)'; % compressed measurement
+            greater_compressive = CompressiveSensing(n,y_greater,perm,combine_zero,chop_threshold);
+            s_greater_full = greater_compressive.compute();
+            [combined_w_values,combined_weights] = greater_compressive.combine(w_values,s_greater_full);
+            [compressive_w_differences,compressive_weights] = greater_compressive.chop(combined_w_values,combined_weights);
+            compressive_weights = compressive_weights/sum(abs(compressive_weights))/2; % normalize the weights
+            return
+        end
     end
 end
