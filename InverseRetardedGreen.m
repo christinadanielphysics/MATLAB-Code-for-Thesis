@@ -15,12 +15,30 @@ classdef InverseRetardedGreen
         w_values
         combine_zero
         chop_threshold
+        lesser_green_matrix
+        greater_green_matrix
     end
 
     methods
         function obj = InverseRetardedGreen(isexact,spin,hubbard,n,perm,t_values,w_values,combine_zero,chop_threshold,k_value,V)
-            lesser_green = LesserGreen(spin,1,1,hubbard);
-            greater_green = GreaterGreen(spin,1,1,hubbard);
+            
+            lesser_green_matrix(V,V) = LesserGreen(spin,1,1,hubbard,n,perm,t_values,w_values,combine_zero,chop_threshold);
+            greater_green_matrix(V,V) = GreaterGreen(spin,1,1,hubbard,n,perm,t_values,w_values,combine_zero,chop_threshold);
+            
+            for i = 1:V
+                for j = 1:V
+                    lesser_object = LesserGreen(spin,i,j,hubbard,n,perm,t_values,w_values,combine_zero,chop_threshold);
+                    lesser_green_matrix(i,j) = lesser_object;
+                    greater_object = GreaterGreen(spin,i,j,hubbard,n,perm,t_values,w_values,combine_zero,chop_threshold);
+                    greater_green_matrix(i,j) = greater_object;
+                end
+            end
+
+            obj.lesser_green_matrix = lesser_green_matrix;
+            obj.greater_green_matrix = greater_green_matrix;
+
+            lesser_green = lesser_green_matrix(1,1);
+            greater_green = greater_green_matrix(1,1);
 
             obj.alpha_max = length(lesser_green.eigenvalues_for_hubbard_minus);
             obj.beta_max = length(greater_green.eigenvalues_for_hubbard_plus);
@@ -32,10 +50,8 @@ classdef InverseRetardedGreen
                 obj.lesser_angular_frequency_differences = lesser_green.angular_frequency_differences;
                 obj.greater_angular_frequency_differences = greater_green.angular_frequency_differences;
             else % compressive sensing
-                [lesser_compressive_w_differences,~] = lesser_green.approximate(n,perm,t_values,w_values,combine_zero,chop_threshold);
-                [greater_compressive_w_differences,~] = greater_green.approximate(n,perm,t_values,w_values,combine_zero,chop_threshold);
-                obj.lesser_angular_frequency_differences = lesser_compressive_w_differences;
-                obj.greater_angular_frequency_differences = greater_compressive_w_differences;
+                obj.lesser_angular_frequency_differences = lesser_green.approximate_angular_frequency_differences;
+                obj.greater_angular_frequency_differences = greater_green.approximate_angular_frequency_differences;
             end
 
             obj.k_value = k_value;
@@ -90,12 +106,12 @@ classdef InverseRetardedGreen
             X_a = 0;
             for i = 1:obj.V
                 for j = 1:obj.V
-                    lesser_green = LesserGreen(obj.spin,i,j,obj.hubbard);
+                    matrix_element = obj.lesser_green_matrix(i,j);
                     if obj.isexact == true % use weight from Lehmann
-                        lesser_weights = lesser_green.weights;
+                        lesser_weights = matrix_element.weights;
                         X_a = X_a + (1/obj.V) * cos( abs(obj.k_value) * abs(i - j) ) * lesser_weights(a);
                     else % use weight from compressive sensing
-                        [~,lesser_weights] = lesser_green.approximate(obj.n,obj.perm,obj.t_values,obj.w_values,obj.combine_zero,obj.chop_threshold);
+                        lesser_weights = matrix_element.approximate_weights;
                         X_a = X_a + (1/obj.V) * cos( abs(obj.k_value) * abs(i - j) ) * lesser_weights(a);
                     end
                 end
@@ -107,13 +123,13 @@ classdef InverseRetardedGreen
             X_b = 0;
             for i = 1:obj.V
                 for j = 1:obj.V
-                    greater_green = GreaterGreen(obj.spin,i,j,obj.hubbard);
+                    matrix_element = obj.greater_green_matrix(i,j);
                     if obj.isexact == true % use weight from Lehmann
-                        greater_weights = greater_green.weights;
+                        greater_weights = matrix_element.weights;
                         X_b = X_b + (1/obj.V) * cos( abs(obj.k_value) * abs(i - j) ) * greater_weights(b);
                     else % use weight from compressive sensing
-                         [~,greater_weights] = greater_green.approximate(obj.n,obj.perm,obj.t_values,obj.w_values,obj.combine_zero,obj.chop_threshold);
-                         X_b = X_b + (1/obj.V) * cos( abs(obj.k_value) * abs(i - j) ) * greater_weights(b);
+                        greater_weights = matrix_element.approximate_weights;
+                        X_b = X_b + (1/obj.V) * cos( abs(obj.k_value) * abs(i - j) ) * greater_weights(b);
                     end
                 end
             end
