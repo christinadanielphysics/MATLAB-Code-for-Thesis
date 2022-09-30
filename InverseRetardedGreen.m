@@ -121,7 +121,6 @@ classdef InverseRetardedGreen
             for a = 1:length(matrix_element.approximate_angular_frequency_differences)
                 lesser_weights = matrix_element.approximate_weights;
                 X_a_sum = X_a_sum + (1/obj.V) * cos( abs(obj.k_value) * abs(i - j) ) * lesser_weights(a);
-                
                 product_over_alpha_not_a = 1;
                 for alpha = 1:length(matrix_element.approximate_angular_frequency_differences)
                     if alpha ~= a
@@ -130,8 +129,6 @@ classdef InverseRetardedGreen
                 end
                 X_a_sum = X_a_sum * product_over_alpha_not_a;
             end
-            product_over_beta = obj.form_product_over_beta_compressive(z);
-            X_a_sum = X_a_sum * product_over_beta;
             return
         end
 
@@ -148,8 +145,6 @@ classdef InverseRetardedGreen
                 end
                 X_a_sum = X_a_sum * product_over_alpha_not_a;
             end
-            product_over_beta = obj.form_product_over_beta_lehmann(z);
-            X_a_sum = X_a_sum * product_over_beta;
             return
         end
 
@@ -166,8 +161,6 @@ classdef InverseRetardedGreen
                 end
                 X_b_sum = X_b_sum * product_over_beta_not_b;
             end
-            product_over_alpha = obj.form_product_over_alpha_compressive(z);
-            X_b_sum = X_b_sum * product_over_alpha;
             return
         end
 
@@ -184,8 +177,6 @@ classdef InverseRetardedGreen
                 end
                 X_b_sum = X_b_sum * product_over_beta_not_b;
             end
-            product_over_alpha = obj.form_product_over_alpha_lehmann(z);
-            X_b_sum = X_b_sum * product_over_alpha;
             return
         end
 
@@ -213,7 +204,7 @@ classdef InverseRetardedGreen
             for i = 1:obj.V
                 for j = 1:obj.V
                     matrix_element = obj.lesser_green_matrix(i,j);
-                    X_a_sum = obj.select_X_a_sum(matrix_element,i,j,z);
+                    X_a_sum = X_a_sum + obj.select_X_a_sum(matrix_element,i,j,z);
                 end
             end
 
@@ -221,8 +212,22 @@ classdef InverseRetardedGreen
             for i = 1:obj.V
                 for j = 1:obj.V
                     matrix_element = obj.greater_green_matrix(i,j);
-                    X_b_sum = obj.select_X_b_sum(matrix_element,i,j,z);
+                    X_b_sum = X_b_sum + obj.select_X_b_sum(matrix_element,i,j,z);
                 end
+            end
+
+            if obj.isexact == true 
+                product_over_beta = obj.form_product_over_beta_lehmann(z);
+                X_a_sum = X_a_sum * product_over_beta;
+
+                product_over_alpha = obj.form_product_over_alpha_lehmann(z);
+                X_b_sum = X_b_sum * product_over_alpha;
+            else
+                product_over_beta = obj.form_product_over_beta_compressive(z);
+                X_a_sum = X_a_sum * product_over_beta;
+
+                product_over_alpha = obj.form_product_over_alpha_compressive(z);
+                X_b_sum = X_b_sum * product_over_alpha;
             end
 
             D = X_a_sum + X_b_sum;

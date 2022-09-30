@@ -13,13 +13,10 @@ classdef InverseRetardedGreen
         chop_threshold
         lesser_green_matrix
         greater_green_matrix
-        new_frequency_tolerance
     end
 
     methods
-        function obj = InverseRetardedGreen(isexact,spin,hubbard,n,perm,t_values,w_values,combine_zero,chop_threshold,k_value,V,new_frequency_tolerance)
-
-            obj.new_frequency_tolerance = new_frequency_tolerance;
+        function obj = InverseRetardedGreen(isexact,spin,hubbard,n,perm,t_values,w_values,combine_zero,chop_threshold,k_value,V)
             
             lesser_green_matrix(V,V) = LesserGreen(spin,1,1,hubbard,n,perm,t_values,w_values,combine_zero,chop_threshold);
             greater_green_matrix(V,V) = GreaterGreen(spin,1,1,hubbard,n,perm,t_values,w_values,combine_zero,chop_threshold);
@@ -75,7 +72,7 @@ classdef InverseRetardedGreen
                 for j = 1:obj.V
                     matrix_element_lesser = obj.lesser_green_matrix(i,j);
                     for index = 1:length(matrix_element_lesser.approximate_angular_frequency_differences)
-                        if ~ismember(round(matrix_element_lesser.approximate_angular_frequency_differences(index),2),round(w_differences,2))
+                        if ~ismember(round(matrix_element_lesser.approximate_angular_frequency_differences(index),1),round(w_differences,1))
                             w_differences(end+1) = matrix_element_lesser.approximate_angular_frequency_differences(index);
                         end
                     end
@@ -83,7 +80,7 @@ classdef InverseRetardedGreen
             end
             product_over_alpha_compressive = 1;
             for alpha = 1:length(w_differences)
-                product_over_alpha_compressive = product_over_alpha_compressive * (z - w_differences(alpha));
+                product_over_alpha_compressive = product_over_alpha_compressive * (z + w_differences(alpha));
             end
             return
         end
@@ -94,7 +91,7 @@ classdef InverseRetardedGreen
                 for j = 1:obj.V
                     matrix_element_greater = obj.greater_green_matrix(i,j);
                     for index = 1:length(matrix_element_greater.approximate_angular_frequency_differences)
-                        if ~ismember(matrix_element_greater.approximate_angular_frequency_differences(index),w_differences)
+                        if ~ismember(round(matrix_element_greater.approximate_angular_frequency_differences(index),1),round(w_differences,1))
                             w_differences(end+1) = matrix_element_greater.approximate_angular_frequency_differences(index);
                         end
                     end
@@ -120,65 +117,65 @@ classdef InverseRetardedGreen
         end
 
         function X_a_sum = form_X_a_sum_compressive(obj,matrix_element,i,j,z)
+            X_a_sum = 0;
             for a = 1:length(matrix_element.approximate_angular_frequency_differences)
                 lesser_weights = matrix_element.approximate_weights;
                 X_a_sum = X_a_sum + (1/obj.V) * cos( abs(obj.k_value) * abs(i - j) ) * lesser_weights(a);
-                product_over_beta = obj.form_product_over_beta_compressive(z);
                 product_over_alpha_not_a = 1;
                 for alpha = 1:length(matrix_element.approximate_angular_frequency_differences)
                     if alpha ~= a
-                        product_over_alpha_not_a = product_over_alpha_not_a * (z - matrix_element.approximate_angular_frequency_differences(alpha));
+                        product_over_alpha_not_a = product_over_alpha_not_a * (z + matrix_element.approximate_angular_frequency_differences(alpha));
                     end
                 end
-                X_a_sum = X_a_sum * product_over_beta * product_over_alpha_not_a;
+                X_a_sum = X_a_sum * product_over_alpha_not_a;
             end
             return
         end
 
         function X_a_sum = form_X_a_sum_lehmann(obj,matrix_element,i,j,z)
+            X_a_sum = 0;
             for a = 1:length(matrix_element.angular_frequency_differences)
                 lesser_weights = matrix_element.weights;
                 X_a_sum = X_a_sum + (1/obj.V) * cos( abs(obj.k_value) * abs(i - j) ) * lesser_weights(a);
-                product_over_beta = obj.form_product_over_beta_lehmann(z);
                 product_over_alpha_not_a = 1;
                 for alpha = 1:length(matrix_element.angular_frequency_differences)
                     if alpha ~= a
                         product_over_alpha_not_a = product_over_alpha_not_a * (z - matrix_element.angular_frequency_differences(alpha));
                     end
                 end
-                X_a_sum = X_a_sum * product_over_beta * product_over_alpha_not_a;
+                X_a_sum = X_a_sum * product_over_alpha_not_a;
             end
             return
         end
 
         function X_b_sum = form_X_b_sum_compressive(obj,matrix_element,i,j,z)
+            X_b_sum = 0;
             for b = 1:length(matrix_element.approximate_angular_frequency_differences)
                 greater_weights = matrix_element.approximate_weights;
                 X_b_sum = X_b_sum + (1/obj.V) * cos( abs(obj.k_value) * abs(i - j) ) * greater_weights(b);
-                product_over_alpha = obj.form_product_over_alpha_compressive(z);
                 product_over_beta_not_b = 1;
                 for beta = 1:length(matrix_element.approximate_angular_frequency_differences)
                     if beta ~= b
                         product_over_beta_not_b = product_over_beta_not_b * (z - matrix_element.approximate_angular_frequency_differences(beta));
                     end
                 end
-                X_b_sum = X_b_sum * product_over_alpha * product_over_beta_not_b;
+                X_b_sum = X_b_sum * product_over_beta_not_b;
             end
             return
         end
 
         function X_b_sum = form_X_b_sum_lehmann(obj,matrix_element,i,j,z)
+            X_b_sum = 0;
             for b = 1:length(matrix_element.angular_frequency_differences)
                 greater_weights = matrix_element.weights;
                 X_b_sum = X_b_sum + (1/obj.V) * cos( abs(obj.k_value) * abs(i - j) ) * greater_weights(b);
-                product_over_alpha = obj.form_product_over_alpha_lehmann(z);
                 product_over_beta_not_b = 1;
                 for beta = 1:length(matrix_element.angular_frequency_differences)
                     if beta ~= b
                         product_over_beta_not_b = product_over_beta_not_b * (z - matrix_element.angular_frequency_differences(beta));
                     end
                 end
-                X_b_sum = X_b_sum * product_over_alpha * product_over_beta_not_b;
+                X_b_sum = X_b_sum * product_over_beta_not_b;
             end
             return
         end
@@ -207,7 +204,7 @@ classdef InverseRetardedGreen
             for i = 1:obj.V
                 for j = 1:obj.V
                     matrix_element = obj.lesser_green_matrix(i,j);
-                    X_a_sum = obj.select_X_a_sum(matrix_element,i,j,z);
+                    X_a_sum = X_a_sum + obj.select_X_a_sum(matrix_element,i,j,z);
                 end
             end
 
@@ -215,9 +212,25 @@ classdef InverseRetardedGreen
             for i = 1:obj.V
                 for j = 1:obj.V
                     matrix_element = obj.greater_green_matrix(i,j);
-                    X_b_sum = obj.select_X_b_sum(matrix_element,i,j,z);
+                    X_b_sum = X_b_sum + obj.select_X_b_sum(matrix_element,i,j,z);
                 end
             end
+
+            if obj.isexact == true 
+                product_over_beta = obj.form_product_over_beta_lehmann(z);
+                X_a_sum = X_a_sum * product_over_beta;
+
+                product_over_alpha = obj.form_product_over_alpha_lehmann(z);
+                X_b_sum = X_b_sum * product_over_alpha;
+            else
+                product_over_beta = obj.form_product_over_beta_compressive(z);
+                X_a_sum = X_a_sum * product_over_beta;
+
+                product_over_alpha = obj.form_product_over_alpha_compressive(z);
+                X_b_sum = X_b_sum * product_over_alpha;
+            end
+
+
 
             D = X_a_sum + X_b_sum;
             return
