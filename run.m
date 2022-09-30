@@ -80,12 +80,17 @@ hubbard_model = Hubbard(U,t_1,t_0,t_2,connected_ends,system,system_minus_up,syst
 % title('Lesser and Greater')
 
 %% Inverse Retarded Green
+
 my_spin = "up";
 k_value = pi;
 isexact = true; % true for Lehmann frequencies and weights, false for compressive sensing frequencies and weights
-z = 0;
-
+syms z;
 inverse_retarded_green = InverseRetardedGreen(isexact,my_spin,hubbard_model,n,perm,t_values,w_values,combine_zero,chop_threshold,k_value,Number_of_Spatial_Orbitals);
-inverse_retarded_green_as_a_ratio = inverse_retarded_green.compute(z);
 
-display(inverse_retarded_green_as_a_ratio)
+%% Testing Functions
+
+product_over_alpha_lehmann = inverse_retarded_green.form_product_over_alpha_lehmann(z);
+product_over_beta_lehmann = inverse_retarded_green.form_product_over_beta_lehmann(z);
+product_over_alpha_compressive = inverse_retarded_green.form_product_over_alpha_compressive(z);
+product_over_beta_compressive = inverse_retarded_green.form_product_over_beta_compressive(z);
+
