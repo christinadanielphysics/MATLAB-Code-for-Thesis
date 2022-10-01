@@ -238,7 +238,7 @@ classdef InverseRetardedGreen
         function inverse_retarded_green = compute(obj,z)
             N = obj.form_numerator(z);
             D = obj.form_denominator(z);
-            inverse_retarded_green_as_a_ratio = N/D;
+            inverse_retarded_green = N/D;
             return
         end
 
