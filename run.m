@@ -4,7 +4,7 @@ clc;
 clear;
 close all;
 
-%% Inverse Retarded Green's Function
+%% Note
 
 % The user needs to copy and paste the
 % correct four polynomials into the following files: 
@@ -17,16 +17,33 @@ close all;
 % This copying and pasting process can be done by running the program
 % twice, once for each value of U.
 
-U = 2; 
-[interacting_denominator_roots,interacting_weights,interacting_symbolic_inverse] = solve(U);
+%% Roots, Weights, and Symbolic Form of the Self Energy
+
 U = 0;
 [noninteracting_denominator_roots,noninteracting_weights,noninteracting_symbolic_inverse] = solve(U);
+U = 2; 
+[interacting_denominator_roots,interacting_weights,interacting_symbolic_inverse] = solve(U);
 
 fplot(noninteracting_symbolic_inverse-interacting_symbolic_inverse)
 hold on;
 scatter(noninteracting_denominator_roots,noninteracting_weights,'red','x')
 hold on;
 scatter(interacting_denominator_roots,-interacting_weights,'blue','x')
+
+%% Roots, Weights, and Symbolic Form of the Interacting Retarded Green's Function
+
+% Analyze the roots and weights of the interacting retarded green's
+% function, D/N
+
+% Form the imaginary and real parts of the interacting retarded green's function
+
+%% Ground State Energy
+
+% Derivation
+
+% Computation
+
+%% Computations
 
 function [denominator_roots,weights,symbolic_inverse] = solve(U)
 
@@ -142,22 +159,6 @@ function [denominator_roots,weights,symbolic_inverse] = solve(U)
 
 end
 
-%% Roots and Weights of the Self Energy
 
-% Combine the results for the inverse of the noninteracting and the inverse of the interacting green's
-% functions, to get the roots and weights of the self energy
 
-% Form the imaginary and real parts of the self energy
 
-%% Weights of the Interacting Retarded Green's Function
-
-% Analyze the roots and weights of the interacting retarded green's
-% function
-
-% Form the imaginary and real parts of the interacting retarded green's function
-
-%% Ground State Energy
-
-% derivation
-
-% computation
