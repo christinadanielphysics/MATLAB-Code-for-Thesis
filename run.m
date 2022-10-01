@@ -17,35 +17,39 @@ close all;
 % This copying and pasting process can be done by running the program
 % twice, once for each value of U.
 
-%% Roots, Weights, and Symbolic Form of the Self Energy
+%% Roots, Weights, and Symbolic Form of the Self Energy and the Interacting Retarded Green's Function
 
 U = 0;
-[noninteracting_denominator_roots,noninteracting_weights,noninteracting_symbolic_inverse] = solve(U);
+[noninteracting_denominator_roots,noninteracting_weights,noninteracting_symbolic_inverse,noninteracting_numerator_roots,noninteracting_retarded_weights,noninteracting_retarded_symbolic_inverse] = solve(U);
 U = 2; 
-[interacting_denominator_roots,interacting_weights,interacting_symbolic_inverse] = solve(U);
+[interacting_denominator_roots,interacting_weights,interacting_symbolic_inverse,interacting_numerator_roots,interacting_retarded_weights,interacting_retarded_symbolic_inverse] = solve(U);
 
-fplot(noninteracting_symbolic_inverse-interacting_symbolic_inverse)
+% Self Energy
+
+figure;
+fplot(noninteracting_symbolic_inverse-interacting_symbolic_inverse);
 hold on;
-scatter(noninteracting_denominator_roots,noninteracting_weights,'red','x')
+scatter(noninteracting_denominator_roots,noninteracting_weights,'red','o');
 hold on;
-scatter(interacting_denominator_roots,-interacting_weights,'blue','x')
+scatter(interacting_denominator_roots,-interacting_weights,'blue','x');
 
-%% Roots, Weights, and Symbolic Form of the Interacting Retarded Green's Function
+% Interacting Retarded Green's Function
 
-% Analyze the roots and weights of the interacting retarded green's
-% function, D/N
+figure;
+fplot(interacting_retarded_symbolic_inverse);
+hold on;
+scatter(interacting_numerator_roots,interacting_retarded_weights);
 
-% Form the imaginary and real parts of the interacting retarded green's function
+% Noninteracting Retarded Green's Function
 
-%% Ground State Energy
-
-% Derivation
-
-% Computation
+figure;
+fplot(noninteracting_retarded_symbolic_inverse);
+hold on;
+scatter(noninteracting_numerator_roots,noninteracting_retarded_weights);
 
 %% Computations
 
-function [denominator_roots,weights,symbolic_inverse] = solve(U)
+function [denominator_roots,weights,symbolic_inverse,numerator_roots,retarded_weights,retarded_symbolic_inverse] = solve(U)
 
     % Compressive Sensing Parameters
     
@@ -150,15 +154,21 @@ function [denominator_roots,weights,symbolic_inverse] = solve(U)
     numerator_roots = get_roots(min,max,step,numerator_function_handle);
 
     % Weights of the Inverse Retarded Green's Function
-    weights = inverse_retarded_green.get_roots_and_weights(numerator_roots,denominator_roots);
+    weights = inverse_retarded_green.get_weights_inverse(numerator_roots,denominator_roots);
 
     % Symbolic Form of the Inverse Retarded Green's Function
     symbolic_numerator = inverse_retarded_green.form_factored_numerator(numerator_roots);
     symbolic_denominator = inverse_retarded_green.form_factored_denominator(denominator_roots);
     symbolic_inverse = symbolic_numerator/symbolic_denominator;
 
+    % Roots of the Retarded Green's Function = numerator_roots
+
+    % Weights of the Retarded Green's Function
+    retarded_weights = inverse_retarded_green.get_weights_retarded(numerator_roots,denominator_roots);
+
+    % Symbolic Form of the Retarded Green's Function
+    retarded_symbolic_inverse = symbolic_denominator/symbolic_numerator;
+
+
 end
-
-
-
 

@@ -282,7 +282,8 @@ classdef InverseRetardedGreen
                 x = root;
                 weights(index) = subs(temp);
             end
-            return
+
+        return
         end
 
         function weights = get_weights_retarded(obj,numerator_roots,denominator_roots)
@@ -292,13 +293,12 @@ classdef InverseRetardedGreen
 
             weights = zeros(length(numerator_roots),1);
             for index = 1:length(numerator_roots)
-                syms x;
-                root = numerator_roots(index);
-                temp = simplify(factored_retarded_green * (x - root));
-                x = root;
-                weights(index) = subs(temp);
+                
             end
+
+
             return
+
         end
     end
 end
