@@ -235,18 +235,56 @@ classdef InverseRetardedGreen
 
         end
 
-        function inverse_retarded_green_as_a_ratio = compute(obj,z)
+        function inverse_retarded_green = compute(obj,z)
             N = obj.form_numerator(z);
             D = obj.form_denominator(z);
             inverse_retarded_green_as_a_ratio = N/D;
             return
         end
 
-        function retarded_green_as_a_ratio = retarded(obj,z)
-            N = obj.form_numerator(z);
-            D = obj.form_denominator(z);
-            retarded_green_as_a_ratio = D/N;
+        function N_factored = form_factored_numerator(obj,numerator_roots)
+           
+            N_factored = 1;
+            syms x;
+
+            for index = 1:length(numerator_roots)
+                N_factored = N_factored * (x - numerator_roots(index));
+            end
+
             return
+
+        end
+
+        function D_factored = form_factored_denominator(obj,denominator_roots)
+
+            D_factored = 1;
+            syms x;
+
+            for index = 1:length(denominator_roots)
+                D_factored = D_factored * (x - denominator_roots(index));
+            end
+
+            return
+        end
+
+        function weights = get_roots_and_weights(obj,numerator_roots,denominator_roots)
+            
+            N_factored = obj.form_factored_numerator(numerator_roots);
+            D_factored = obj.form_factored_denominator(denominator_roots);
+            factored_inverse_retarded_green = N_factored/D_factored;
+           
+
+            weights = zeros(length(denominator_roots),1);
+            for index = 1:length(denominator_roots)
+                syms x;
+                root = denominator_roots(index);
+                temp = simplify(factored_inverse_retarded_green * (x - root));
+                x = root;
+                weights(index) = subs(temp);
+            end
+
+        return
+
         end
     end
 end
