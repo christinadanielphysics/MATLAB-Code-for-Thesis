@@ -9,20 +9,20 @@ close all;
 % The user needs to copy and paste the
 % correct four polynomials into the following files: 
 %
-% 1) d.m
-% 2) d_noninteracting.m
-% 3) n.m
-% 4) n_noninteracting.m
+% 1) d.m from d_for_file
+% 2) d_noninteracting.m from d_noninteracting_for_file
+% 3) n.m from n_for_file
+% 4) n_noninteracting.m from n_noninteracting_for_file
 %
-% This copying and pasting process can be done by running the program
-% twice, once for each value of U.
+% First run the program, then copy and paste the polynomials, then 
+% the program can get accurate roots and corresponding results.
 
 %% Roots, Weights, and Symbolic Form of the Self Energy and the Interacting Retarded Green's Function
 
 U = 0;
-[noninteracting_denominator_roots,noninteracting_weights,noninteracting_symbolic_inverse,noninteracting_numerator_roots,noninteracting_retarded_weights,noninteracting_retarded_symbolic_inverse] = solve(U);
+[d_noninteracting_for_file,n_noninteracting_for_file,noninteracting_denominator_roots,noninteracting_weights,noninteracting_symbolic_inverse,noninteracting_numerator_roots,noninteracting_retarded_weights,noninteracting_retarded_symbolic_inverse] = solve(U);
 U = 2; 
-[interacting_denominator_roots,interacting_weights,interacting_symbolic_inverse,interacting_numerator_roots,interacting_retarded_weights,interacting_retarded_symbolic_inverse] = solve(U);
+[d_for_file,n_for_file,interacting_denominator_roots,interacting_weights,interacting_symbolic_inverse,interacting_numerator_roots,interacting_retarded_weights,interacting_retarded_symbolic_inverse] = solve(U);
 
 % Self Energy
 
@@ -49,7 +49,7 @@ scatter(noninteracting_numerator_roots,noninteracting_retarded_weights);
 
 %% Computations
 
-function [denominator_roots,weights,symbolic_inverse,numerator_roots,retarded_weights,retarded_symbolic_inverse] = solve(U)
+function [denominator_polynomial, numerator_polynomial, denominator_roots,weights,symbolic_inverse,numerator_roots,retarded_weights,retarded_symbolic_inverse] = solve(U)
 
     % Compressive Sensing Parameters
     
@@ -78,7 +78,7 @@ function [denominator_roots,weights,symbolic_inverse,numerator_roots,retarded_we
     
     % Hubbard
     
-    mu = 0.5*U;
+    mu = 0.5*U; % chemical potential for half-filling
     t_0 = 0;
     t_1 = 1;
     t_2 = 0;
@@ -129,11 +129,11 @@ function [denominator_roots,weights,symbolic_inverse,numerator_roots,retarded_we
     
     my_spin = "up";
     k_value = pi;
-    isexact = false; % true for Lehmann frequencies and weights, false for compressive sensing frequencies and weights
+    isexact = true; % true for Lehmann frequencies and weights, false for compressive sensing frequencies and weights
     inverse_retarded_green = InverseRetardedGreen(isexact,my_spin,hubbard_model,n,perm,t_values,w_values,combine_zero,chop_threshold,k_value,Number_of_Spatial_Orbitals);
     syms z;
-    denominator_polynomial = inverse_retarded_green.form_denominator(z)
-    numerator_polynomial = inverse_retarded_green.form_numerator(z)
+    denominator_polynomial = inverse_retarded_green.form_denominator(z);
+    numerator_polynomial = inverse_retarded_green.form_numerator(z);
 
 
     % USER: Copy and paste denominator and numerator polynomials into d.m and
@@ -171,4 +171,3 @@ function [denominator_roots,weights,symbolic_inverse,numerator_roots,retarded_we
 
 
 end
-
