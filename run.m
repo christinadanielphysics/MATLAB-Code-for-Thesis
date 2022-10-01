@@ -129,15 +129,11 @@ function [denominator_polynomial, numerator_polynomial, denominator_roots,weight
     
     my_spin = "up";
     k_value = pi;
-    isexact = true; % true for Lehmann frequencies and weights, false for compressive sensing frequencies and weights
+    isexact = false; % true for Lehmann frequencies and weights, false for compressive sensing frequencies and weights
     inverse_retarded_green = InverseRetardedGreen(isexact,my_spin,hubbard_model,n,perm,t_values,w_values,combine_zero,chop_threshold,k_value,Number_of_Spatial_Orbitals);
     syms z;
-    denominator_polynomial = inverse_retarded_green.form_denominator(z);
-    numerator_polynomial = inverse_retarded_green.form_numerator(z);
-
-
-    % USER: Copy and paste denominator and numerator polynomials into d.m and
-    % n.m, respectively.
+    denominator_polynomial = inverse_retarded_green.form_denominator(z)
+    numerator_polynomial = inverse_retarded_green.form_numerator(z)
 
     
     % Roots of the Inverse Retarded Green's Function
