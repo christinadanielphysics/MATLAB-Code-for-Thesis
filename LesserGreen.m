@@ -4,6 +4,7 @@ classdef LesserGreen
         spin
         spatial_orbital_index_i
         spatial_orbital_index_j
+        site_difference
         hubbard
         eigenvalues_for_hubbard
         eigenvectors_for_hubbard
@@ -26,6 +27,8 @@ classdef LesserGreen
     methods
         function obj = LesserGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard,n,perm,t_values,w_values,combine_zero,chop_threshold)
             if nargin > 0
+                obj.site_difference = abs(spatial_orbital_index_i - spatial_orbital_index_j);
+
                 obj.spin = spin; % operator (i.e. "up" or "down")
                 obj.spatial_orbital_index_i = spatial_orbital_index_i;
                 obj.spatial_orbital_index_j = spatial_orbital_index_j;
