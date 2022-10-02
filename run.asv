@@ -35,7 +35,7 @@ hold on;
 scatter(interacting_denominator_roots,-interacting_weights,'blue','x');
 title("Self Energy")
 xlabel('$\omega$',interpreter='latex') 
-ylabel('$\Sigma^R_{\uparrow}(k=\frac{\pi}{a},\omega)$',Interpreter='latex')
+ylabel('$\Sigma(\omega)',Interpreter=)
 
 % Interacting Retarded Green's Function
 
@@ -45,7 +45,6 @@ hold on;
 scatter(interacting_numerator_roots,interacting_retarded_weights);
 title("Interacting Retarded Green's Function");
 xlabel('$\omega$',interpreter='latex') 
-ylabel('$G^R_{\uparrow}(k=\frac{\pi}{a},\omega)$',Interpreter='latex')
 
 % Noninteracting Retarded Green's Function
 
@@ -55,7 +54,6 @@ hold on;
 scatter(noninteracting_numerator_roots,noninteracting_retarded_weights);
 title("Noninteracting Retarded Green's Function");
 xlabel('$\omega$',interpreter='latex') 
-ylabel('$G0^R_{\uparrow}(k=\frac{\pi}{a},\omega)$',Interpreter='latex')
 
 %% Computations
 
