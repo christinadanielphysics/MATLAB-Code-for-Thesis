@@ -71,9 +71,9 @@ function [denominator_polynomial, numerator_polynomial, denominator_roots,weight
     
     % System
     
-    Number_of_Spatial_Orbitals = 8;
-    Number_of_Spin_Up_Electrons = 4; % must be >= 2 to compuate a spin-up lesser green's function that is nonzero
-    Number_of_Spin_Down_Electrons = 4; % must be >= 2 to compute a spin-down lesser green's function that is nonzero
+    Number_of_Spatial_Orbitals = 4;
+    Number_of_Spin_Up_Electrons = 2; % must be >= 2 to compuate a spin-up lesser green's function that is nonzero
+    Number_of_Spin_Down_Electrons = 2; % must be >= 2 to compute a spin-down lesser green's function that is nonzero
     Number_of_Electrons = Number_of_Spin_Up_Electrons + Number_of_Spin_Down_Electrons;
     system = System(Number_of_Spatial_Orbitals,Number_of_Spin_Up_Electrons,Number_of_Spin_Down_Electrons,true,true);
     
@@ -90,41 +90,41 @@ function [denominator_polynomial, numerator_polynomial, denominator_roots,weight
     
     % Lesser and Greater Green
     
-    % spin = "up";
-    % spatial_orbital_index_i = 1;
-    % spatial_orbital_index_j = 4;
-    % lesser_green = LesserGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard_model,n,perm,t_values,w_values,combine_zero,chop_threshold);
-    % [lesser_real,lesser_imaginary] = lesser_green.compute(t_values);
-    % greater_green = GreaterGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard_model,n,perm,t_values,w_values,combine_zero,chop_threshold);
-    % [greater_real,greater_imaginary] = greater_green.compute(t_values);
-    % 
-    % %% Compressive Sensing
-    % 
-    % greater_compressive_w_differences = greater_green.approximate_angular_frequency_differences;
-    % greater_compressive_weights = greater_green.approximate_weights;
-    % lesser_compressive_w_differences = lesser_green.approximate_angular_frequency_differences;
-    % lesser_compressive_weights = lesser_green.approximate_weights;
-    % 
-    % %% Plotting
-    % 
-    % figure;
-    % plot(t_values,greater_imaginary,'cyan')
-    % hold on;
-    % plot(t_values,greater_real,'red')
-    % hold on;
-    % scatter(t_values,lesser_imaginary,'green')
-    % hold on;
-    % scatter(t_values,lesser_real,'blue')
-    % title('Lesser and Greater')
-    % figure;
-    % scatter(greater_green.angular_frequency_differences,greater_green.weights,'black');
-    % hold on;
-    % scatter(lesser_green.angular_frequency_differences,lesser_green.weights,'black');
-    % hold on;
-    % scatter(greater_compressive_w_differences,greater_compressive_weights,'blue','o','MarkerFaceColor', 'b');
-    % hold on;
-    % scatter(-lesser_compressive_w_differences,lesser_compressive_weights,'blue','o','MarkerFaceColor', 'b');
-    % title('Lesser and Greater')
+    spin = "up";
+    spatial_orbital_index_i = 1;
+    spatial_orbital_index_j = 4;
+    lesser_green = LesserGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard_model,n,perm,t_values,w_values,combine_zero,chop_threshold);
+    [lesser_real,lesser_imaginary] = lesser_green.compute(t_values);
+    greater_green = GreaterGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard_model,n,perm,t_values,w_values,combine_zero,chop_threshold);
+    [greater_real,greater_imaginary] = greater_green.compute(t_values);
+    
+    %% Compressive Sensing
+    
+    greater_compressive_w_differences = greater_green.approximate_angular_frequency_differences;
+    greater_compressive_weights = greater_green.approximate_weights;
+    lesser_compressive_w_differences = lesser_green.approximate_angular_frequency_differences;
+    lesser_compressive_weights = lesser_green.approximate_weights;
+    
+    %% Plotting
+    
+    figure;
+    plot(t_values,greater_imaginary,'cyan')
+    hold on;
+    plot(t_values,greater_real,'red')
+    hold on;
+    scatter(t_values,lesser_imaginary,'green')
+    hold on;
+    scatter(t_values,lesser_real,'blue')
+    title('Lesser and Greater')
+    figure;
+    scatter(greater_green.angular_frequency_differences,greater_green.weights,'black');
+    hold on;
+    scatter(lesser_green.angular_frequency_differences,lesser_green.weights,'black');
+    hold on;
+    scatter(greater_compressive_w_differences,greater_compressive_weights,'blue','o','MarkerFaceColor', 'b');
+    hold on;
+    scatter(-lesser_compressive_w_differences,lesser_compressive_weights,'blue','o','MarkerFaceColor', 'b');
+    title('Lesser and Greater')
     
     % Inverse Retarded Green
     
