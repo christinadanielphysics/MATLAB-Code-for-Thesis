@@ -67,12 +67,10 @@ classdef LesserGreen
                 end
                 obj.weights = weights;
                 obj.angular_frequency_differences = angular_frequency_differences;
+                writematrix(angular_frequency_differences,"lesser"+"_"+string()angular_frequency_differences.dat",'Delimiter',' ')  
+                writematrix(weights,"weights.dat",'Delimiter',' ') 
 
-                % Write Data
-                prefix = "lesser"+"_"+string(spatial_orbital_index_i)+"_"+string(spatial_orbital_index_j)+"_";
-                writematrix(angular_frequency_differences,prefix+"angular_frequency_differences.dat",'Delimiter',' ')  
-                writematrix(weights,prefix+"weights.dat",'Delimiter',' ') 
-
+    
                 [~,lesser_imaginary] = obj.compute(t_values);                
                 y_lesser = lesser_imaginary(perm)'; % compressed measurement
                 lesser_compressive = CompressiveSensing(n,y_lesser,perm,combine_zero,chop_threshold);

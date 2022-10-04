@@ -19,36 +19,55 @@ U = 2;
 
 %% Plotting
 
-% Self Energy
-figure;
-fplot(noninteracting_symbolic_inverse-interacting_symbolic_inverse);
-hold on;
-scatter(noninteracting_denominator_roots,noninteracting_weights,'red','o');
-hold on;
-scatter(interacting_denominator_roots,-interacting_weights,'blue','x');
-title("Self Energy")
-xlabel('$\omega$',interpreter='latex') 
-ylabel('$\Sigma^R_{\uparrow}(k=\frac{\pi}{a},\omega)$',Interpreter='latex')
+% % Self Energy
+% 
+% figure; 
+% fplot(noninteracting_symbolic_inverse-interacting_symbolic_inverse);
+% hold on;
+% scatter(noninteracting_denominator_roots,noninteracting_weights,'red','o');
+% hold on;
+% scatter(interacting_denominator_roots,-interacting_weights,'blue','x');
+% title("Self Energy")
+% xlabel('$\omega$',interpreter='latex') 
+% ylabel('$\Sigma^R_{\uparrow}(k=0,\omega)$',Interpreter='latex')
+% 
+% % Interacting Retarded Green's Function
+% 
+% figure;
+% fplot(interacting_retarded_symbolic_inverse);
+% hold on;
+% scatter(interacting_numerator_roots,interacting_retarded_weights);
+% title("Interacting Retarded Green's Function");
+% xlabel('$\omega$',interpreter='latex') 
+% ylabel('$G^R_{\uparrow}(k=0,\omega)$',Interpreter='latex')
+% 
+% % Noninteracting Retarded Green's Function
+% 
+% figure;
+% fplot(noninteracting_retarded_symbolic_inverse);
+% hold on;
+% scatter(noninteracting_numerator_roots,noninteracting_retarded_weights);
+% title("Noninteracting Retarded Green's Function");
+% xlabel('$\omega$',interpreter='latex') 
+% ylabel('$G0^R_{\uparrow}(k=0,\omega)$',Interpreter='latex')
 
-% Interacting Retarded Green's Function
+%% Write Data to File
 
-figure;
-fplot(interacting_retarded_symbolic_inverse);
-hold on;
-scatter(interacting_numerator_roots,interacting_retarded_weights);
-title("Interacting Retarded Green's Function");
-xlabel('$\omega$',interpreter='latex') 
-ylabel('$G^R_{\uparrow}(k=\frac{\pi}{a},\omega)$',Interpreter='latex')
+writematrix(noninteracting_denominator_roots,'noninteracting_denominator_roots.dat','Delimiter',' ')  
 
-% Noninteracting Retarded Green's Function
+writematrix(noninteracting_weights,'noninteracting_weights.dat','Delimiter',' ')  
 
-figure;
-fplot(noninteracting_retarded_symbolic_inverse);
-hold on;
-scatter(noninteracting_numerator_roots,noninteracting_retarded_weights);
-title("Noninteracting Retarded Green's Function");
-xlabel('$\omega$',interpreter='latex') 
-ylabel('$G0^R_{\uparrow}(k=\frac{\pi}{a},\omega)$',Interpreter='latex')
+writematrix(interacting_denominator_roots,'interacting_denominator_roots.dat','Delimiter',' ')  
+
+writematrix(interacting_weights,'interacting_weights.dat','Delimiter',' ')  
+
+writematrix(interacting_numerator_roots,'interacting_numerator_roots.dat','Delimiter',' ')  
+
+writematrix(interacting_retarded_weights,'interacting_retarded_weights.dat','Delimiter',' ')  
+
+writematrix(noninteracting_numerator_roots,'noninteracting_numerator_roots.dat','Delimiter',' ')  
+
+writematrix(noninteracting_retarded_weights,'noninteracting_retarded_weights.dat','Delimiter',' ')  
 
 %% Computations
 
@@ -67,7 +86,6 @@ function [denominator_polynomial, numerator_polynomial, denominator_roots,weight
     f = Fs*(0:n-1)/n; % ... with f = Fs*(1:n)/n
     w_values = f*pi;
     delta_f = f(2)-f(1);
-    
     
     % System
     
@@ -88,48 +106,48 @@ function [denominator_polynomial, numerator_polynomial, denominator_roots,weight
     system_minus_down = System(Number_of_Spatial_Orbitals,Number_of_Spin_Up_Electrons,Number_of_Spin_Down_Electrons-1,false,true);
     hubbard_model = Hubbard(U,t_1,t_0,t_2,connected_ends,system,system_minus_up,system_minus_down);
     
-    % Lesser and Greater Green
-    
-    spin = "up";
-    spatial_orbital_index_i = 1;
-    spatial_orbital_index_j = 4;
-    lesser_green = LesserGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard_model,n,perm,t_values,w_values,combine_zero,chop_threshold);
-    [lesser_real,lesser_imaginary] = lesser_green.compute(t_values);
-    greater_green = GreaterGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard_model,n,perm,t_values,w_values,combine_zero,chop_threshold);
-    [greater_real,greater_imaginary] = greater_green.compute(t_values);
-    
-    %% Compressive Sensing
-    
-    greater_compressive_w_differences = greater_green.approximate_angular_frequency_differences;
-    greater_compressive_weights = greater_green.approximate_weights;
-    lesser_compressive_w_differences = lesser_green.approximate_angular_frequency_differences;
-    lesser_compressive_weights = lesser_green.approximate_weights;
-    
-    %% Plotting
-    
-    figure;
-    plot(t_values,greater_imaginary,'cyan')
-    hold on;
-    plot(t_values,greater_real,'red')
-    hold on;
-    scatter(t_values,lesser_imaginary,'green')
-    hold on;
-    scatter(t_values,lesser_real,'blue')
-    title('Lesser and Greater')
-    figure;
-    scatter(greater_green.angular_frequency_differences,greater_green.weights,'black');
-    hold on;
-    scatter(lesser_green.angular_frequency_differences,lesser_green.weights,'black');
-    hold on;
-    scatter(greater_compressive_w_differences,greater_compressive_weights,'blue','o','MarkerFaceColor', 'b');
-    hold on;
-    scatter(-lesser_compressive_w_differences,lesser_compressive_weights,'blue','o','MarkerFaceColor', 'b');
-    title('Lesser and Greater')
+%     % Lesser and Greater Green
+%     
+%     spin = "up";
+%     spatial_orbital_index_i = 1;
+%     spatial_orbital_index_j = 4;
+%     lesser_green = LesserGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard_model,n,perm,t_values,w_values,combine_zero,chop_threshold);
+%     [lesser_real,lesser_imaginary] = lesser_green.compute(t_values);
+%     greater_green = GreaterGreen(spin,spatial_orbital_index_i,spatial_orbital_index_j,hubbard_model,n,perm,t_values,w_values,combine_zero,chop_threshold);
+%     [greater_real,greater_imaginary] = greater_green.compute(t_values);
+%     
+%     %% Compressive Sensing
+%     
+%     greater_compressive_w_differences = greater_green.approximate_angular_frequency_differences;
+%     greater_compressive_weights = greater_green.approximate_weights;
+%     lesser_compressive_w_differences = lesser_green.approximate_angular_frequency_differences;
+%     lesser_compressive_weights = lesser_green.approximate_weights;
+%     
+%     %% Plotting
+%     
+%     figure;
+%     plot(t_values,greater_imaginary,'cyan')
+%     hold on;
+%     plot(t_values,greater_real,'red')
+%     hold on;
+%     scatter(t_values,lesser_imaginary,'green')
+%     hold on;
+%     scatter(t_values,lesser_real,'blue')
+%     title('Lesser and Greater')
+%     figure;
+%     scatter(greater_green.angular_frequency_differences,greater_green.weights,'black');
+%     hold on;
+%     scatter(lesser_green.angular_frequency_differences,lesser_green.weights,'black');
+%     hold on;
+%     scatter(greater_compressive_w_differences,greater_compressive_weights,'blue','o','MarkerFaceColor', 'b');
+%     hold on;
+%     scatter(-lesser_compressive_w_differences,lesser_compressive_weights,'blue','o','MarkerFaceColor', 'b');
+%     title('Lesser and Greater')
     
     % Inverse Retarded Green
     
     my_spin = "up";
-    k_value = pi;
+    k_value = 0;
     isexact = false; % true for Lehmann frequencies and weights, false for compressive sensing frequencies and weights
     inverse_retarded_green = InverseRetardedGreen(isexact,my_spin,hubbard_model,n,perm,t_values,w_values,combine_zero,chop_threshold,k_value,Number_of_Spatial_Orbitals);
     syms z;

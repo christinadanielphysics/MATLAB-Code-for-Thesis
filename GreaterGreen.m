@@ -64,10 +64,14 @@ classdef GreaterGreen
                     matrix_element_2 = MatrixElement("creation",spatial_orbital_index_j,spin,b,hubbard_plus,1,hubbard,obj.system_for_element,obj.system_for_element,obj.system_for_element,obj.system_plus_up_for_element,obj.system_plus_down_for_element,"greater");
                     weights(1,b) = matrix_element_1.compute() * matrix_element_2.compute();
                     angular_frequency_differences(1,b) = obj.eigenvalues_for_hubbard_plus(b) - obj.eigenvalues_for_hubbard(1);
-    
                 end
                 obj.weights = weights;
                 obj.angular_frequency_differences = angular_frequency_differences;
+
+                % Write Data
+                prefix = "greater"+"_"+string(spatial_orbital_index_i)+"_"+string(spatial_orbital_index_j)+"_";
+                writematrix(angular_frequency_differences,prefix+"angular_frequency_differences.dat",'Delimiter',' ')  
+                writematrix(weights,prefix+"weights.dat",'Delimiter',' ') 
     
                 [~,greater_imaginary] = obj.compute(t_values);
                 y_greater = -greater_imaginary(perm)'; % compressed measurement
