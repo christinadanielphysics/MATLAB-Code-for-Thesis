@@ -14,7 +14,7 @@ perm = round(rand(p,1) * n);
 
 U = 0;
 [d_noninteracting_for_file,n_noninteracting_for_file,noninteracting_denominator_roots,noninteracting_weights,noninteracting_symbolic_inverse,noninteracting_numerator_roots,noninteracting_retarded_weights,noninteracting_retarded_symbolic_inverse] = solve(U,n,perm);
-U = 2; 
+U = 3; 
 [d_for_file,n_for_file,interacting_denominator_roots,interacting_weights,interacting_symbolic_inverse,interacting_numerator_roots,interacting_retarded_weights,interacting_retarded_symbolic_inverse] = solve(U,n,perm);
 
 %% Plotting
