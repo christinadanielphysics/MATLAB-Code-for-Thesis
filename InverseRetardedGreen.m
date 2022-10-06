@@ -23,6 +23,7 @@ classdef InverseRetardedGreen
 
             original_i = 1;
             for j = 1:V
+                display(j);
                 lesser_green_row(original_i,j) = LesserGreen(spin,original_i,j,hubbard,n,perm,t_values,w_values,combine_zero,chop_threshold);
                 greater_green_row(original_i,j) = GreaterGreen(spin,original_i,j,hubbard,n,perm,t_values,w_values,combine_zero,chop_threshold);
             end

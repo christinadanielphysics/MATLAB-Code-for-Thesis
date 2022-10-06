@@ -89,9 +89,9 @@ function [denominator_polynomial, numerator_polynomial, denominator_roots,weight
     
     % System
     
-    Number_of_Spatial_Orbitals = 4;
-    Number_of_Spin_Up_Electrons = 2; % must be >= 2 to compuate a spin-up lesser green's function that is nonzero
-    Number_of_Spin_Down_Electrons = 2; % must be >= 2 to compute a spin-down lesser green's function that is nonzero
+    Number_of_Spatial_Orbitals = 6;
+    Number_of_Spin_Up_Electrons = 3; % must be >= 2 to compuate a spin-up lesser green's function that is nonzero
+    Number_of_Spin_Down_Electrons = 3; % must be >= 2 to compute a spin-down lesser green's function that is nonzero
     Number_of_Electrons = Number_of_Spin_Up_Electrons + Number_of_Spin_Down_Electrons;
     system = System(Number_of_Spatial_Orbitals,Number_of_Spin_Up_Electrons,Number_of_Spin_Down_Electrons,true,true);
     

@@ -59,19 +59,22 @@ classdef LesserGreen
                 obj.a_max = length(obj.eigenvalues_for_hubbard_minus);
                 weights = zeros(1,obj.a_max); % array to store each product of two matrix elements; one product for each index a
                 angular_frequency_differences = zeros(1,obj.a_max); % array to store each difference of two eigenvalues; one difference for each index a
-                for a = 1:obj.a_max
-                    matrix_element_1 = MatrixElement("creation",spatial_orbital_index_j,spin,1,hubbard,a,hubbard_minus,obj.system_for_element,obj.system_minus_up_for_element,obj.system_minus_down_for_element,obj.system_for_element,obj.system_for_element,"lesser");
-                    matrix_element_2 = MatrixElement("annihilation",spatial_orbital_index_i,spin,a,hubbard_minus,1,hubbard,obj.system_for_element,obj.system_minus_up_for_element,obj.system_minus_down_for_element,obj.system_for_element,obj.system_for_element,"lesser");
-                    weights(1,a) = matrix_element_1.compute() * matrix_element_2.compute();
-                    angular_frequency_differences(1,a) = obj.eigenvalues_for_hubbard(1) - obj.eigenvalues_for_hubbard_minus(a); 
-                end
-                obj.weights = weights;
-                obj.angular_frequency_differences = angular_frequency_differences;
+%                 for a = 1:obj.a_max
+%                     matrix_element_1 = MatrixElement("creation",spatial_orbital_index_j,spin,1,hubbard,a,hubbard_minus,obj.system_for_element,obj.system_minus_up_for_element,obj.system_minus_down_for_element,obj.system_for_element,obj.system_for_element,"lesser");
+%                     matrix_element_2 = MatrixElement("annihilation",spatial_orbital_index_i,spin,a,hubbard_minus,1,hubbard,obj.system_for_element,obj.system_minus_up_for_element,obj.system_minus_down_for_element,obj.system_for_element,obj.system_for_element,"lesser");
+%                     weights(1,a) = matrix_element_1.compute() * matrix_element_2.compute();
+%                     angular_frequency_differences(1,a) = obj.eigenvalues_for_hubbard(1) - obj.eigenvalues_for_hubbard_minus(a); 
+%                 end
+%                 obj.weights = weights;
+%                 obj.angular_frequency_differences = angular_frequency_differences;
 
                 % Write Data
                 prefix = "lesser"+"_"+string(spatial_orbital_index_i)+"_"+string(spatial_orbital_index_j)+"_";
-                writematrix(angular_frequency_differences,prefix+"angular_frequency_differences.dat",'Delimiter',' ')  
-                writematrix(weights,prefix+"weights.dat",'Delimiter',' ') 
+                % writematrix(angular_frequency_differences,prefix+"angular_frequency_differences.dat",'Delimiter',' ')  
+                % writematrix(weights,prefix+"weights.dat",'Delimiter',' ') 
+
+                obj.weights = readmatrix(prefix+"weights.dat");
+                obj.angular_frequency_differences = readmatrix(prefix+"angular_frequency_differences.dat");
 
                 [~,lesser_imaginary] = obj.compute(t_values);                
                 y_lesser = lesser_imaginary(perm)'; % compressed measurement
