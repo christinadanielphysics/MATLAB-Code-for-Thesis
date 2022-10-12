@@ -59,24 +59,28 @@ classdef GreaterGreen
                 obj.b_max = length(obj.eigenvalues_for_hubbard_plus);
                 weights = zeros(1,obj.b_max);
                 angular_frequency_differences = zeros(1,obj.b_max);
-%                 for b = 1:obj.b_max
-%                     matrix_element_1 = MatrixElement("annihilation",spatial_orbital_index_i,spin,1,hubbard,b,hubbard_plus,obj.system_for_element,obj.system_for_element,obj.system_for_element,obj.system_plus_up_for_element,obj.system_plus_down_for_element,"greater");
-%                     matrix_element_2 = MatrixElement("creation",spatial_orbital_index_j,spin,b,hubbard_plus,1,hubbard,obj.system_for_element,obj.system_for_element,obj.system_for_element,obj.system_plus_up_for_element,obj.system_plus_down_for_element,"greater");
-%                     weights(1,b) = matrix_element_1.compute() * matrix_element_2.compute();
-%                     angular_frequency_differences(1,b) = obj.eigenvalues_for_hubbard_plus(b) - obj.eigenvalues_for_hubbard(1);
-%                 end
-%                 obj.weights = weights;
-%                 obj.angular_frequency_differences = angular_frequency_differences;
+                for b = 1:obj.b_max
+                    matrix_element_1 = MatrixElement("annihilation",spatial_orbital_index_i,spin,1,hubbard,b,hubbard_plus,obj.system_for_element,obj.system_for_element,obj.system_for_element,obj.system_plus_up_for_element,obj.system_plus_down_for_element,"greater");
+                    matrix_element_2 = MatrixElement("creation",spatial_orbital_index_j,spin,b,hubbard_plus,1,hubbard,obj.system_for_element,obj.system_for_element,obj.system_for_element,obj.system_plus_up_for_element,obj.system_plus_down_for_element,"greater");
+                    weights(1,b) = matrix_element_1.compute() * matrix_element_2.compute();
+                    angular_frequency_differences(1,b) = obj.eigenvalues_for_hubbard_plus(b) - obj.eigenvalues_for_hubbard(1);
+                end
+                obj.weights = weights;
+                obj.angular_frequency_differences = angular_frequency_differences;
 
                 % Write Data
-                prefix = "greater"+"_"+string(spatial_orbital_index_i)+"_"+string(spatial_orbital_index_j)+"_";
-                %writematrix(angular_frequency_differences,prefix+"angular_frequency_differences.dat",'Delimiter',' ')  
-                %writematrix(weights,prefix+"weights.dat",'Delimiter',' ') 
+                folder = "./U="+string(hubbard.U)+"/";
+                prefix = folder + "greater"+"_"+string(spatial_orbital_index_i)+"_"+string(spatial_orbital_index_j)+"_";
+                writematrix(angular_frequency_differences,prefix+"angular_frequency_differences.dat",'Delimiter',' ')  
+                writematrix(weights,prefix+"weights.dat",'Delimiter',' ') 
 
-                obj.weights = readmatrix(prefix+"weights.dat");
-                obj.angular_frequency_differences = readmatrix(prefix+"angular_frequency_differences.dat");
+%                 obj.weights = importdata(prefix+"weights.dat");
+%                 obj.angular_frequency_differences = readmatrix(prefix+"angular_frequency_differences.dat");
     
+
                 [~,greater_imaginary] = obj.compute(t_values);
+
+
                 y_greater = -greater_imaginary(perm)'; % compressed measurement
                 greater_compressive = CompressiveSensing(n,y_greater,perm,combine_zero,chop_threshold);
                 s_greater_full = greater_compressive.compute();
